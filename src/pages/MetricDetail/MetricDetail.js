@@ -33,8 +33,19 @@ function MetricDetail(){
     },[end,begin])
     useEffect(()=>{
         const response=APIServer.getContent('/apiv1/gui/metrics/limits?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
-        response.then(value =>
-            setLimits(value.data)
+        response.then(value =>{
+            let locLimits=[]
+            value.data.map(lim =>{
+                let name=JSON.parse(lim.name)
+                let newName=""
+                for (const [key, value] of Object.entries(name)) {
+                    newName+=key+":"+value+" ";
+                }
+                lim.name=newName
+                locLimits.push(lim)
+            })
+            setLimits(locLimits)
+        }
         )    
     },[end,begin])
     

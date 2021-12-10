@@ -1,0 +1,10 @@
+.NavBarItem{
+    display: inline-block;
+    text-decoration: none;
+    background-color: green;
+    color: white;
+    font-size: x-large;
+    padding: 5px 20px;
+    border-radius: 100px;
+    margin: 0px 3px;
+}

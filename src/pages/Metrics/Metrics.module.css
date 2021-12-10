@@ -1,0 +1,25 @@
+.Metrics {
+    margin: 10px;
+    padding: 30px;
+    background-color: white;
+    min-height: 900px;
+    border: 1px solid grey;
+    border-radius: 15px;
+}
+.MetricsFilter{
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid lightgrey;
+    vertical-align: middle;
+}
+.MetricsFilterInput{
+    height: 30px;
+    width: 350px;
+    font-size: large;
+}
+.MetricsFilterButton{
+    height: 30px;
+    width: 100px;
+    margin-left: 5px;
+    font-size: large;
+}

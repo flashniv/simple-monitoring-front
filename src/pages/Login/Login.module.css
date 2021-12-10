@@ -1,0 +1,33 @@
+.Login{
+    display: flex;
+    justify-content: center;
+}
+
+.LoginForm{
+    background-color: white;
+    width: 450px;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.Input{
+    display: block;
+    width: 100%;
+    height: 35px;
+    margin-bottom: 10px;
+    font-size: large;
+}
+.Button{
+    display: block;
+    width: 100%;
+    height: 35px;
+    font-size: large;
+}
+.Span{
+    color: red;
+    font-size: large;
+    display: none;
+    text-align: center;
+    padding-bottom: 15px;
+    font-weight: bold;
+}

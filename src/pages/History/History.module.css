@@ -1,0 +1,30 @@
+.History{
+    margin: 10px;
+    padding: 30px;
+    background-color: white;
+    min-height: 900px;
+    border: 1px solid grey;
+    border-radius: 15px;
+}
+.HistoryFilter{
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid lightgrey;
+    vertical-align: middle;
+}
+.HistoryFilterInputText{
+    height: 30px;
+    width: 350px;
+    font-size: large;
+}
+.HistoryFilterButton{
+    height: 30px;
+    width: 100px;
+    margin-left: 5px;
+    font-size: large;
+}
+.HistoryFilterInputCheck{
+    transform: scale(2);
+    margin-right: 10px;
+    margin-left: 5px;
+}

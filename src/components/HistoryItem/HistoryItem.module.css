@@ -1,0 +1,19 @@
+.HistoryItem{
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px;
+    border: 1px solid grey;
+}
+.HistoryItemDate:hover::before{
+    content: attr(data-title);
+    position: relative; /* Абсолютное позиционирование */
+    left: 50%; top: -200%; /* Положение подсказки */
+    z-index: 1; /* Отображаем подсказку поверх других элементов */
+    background: rgba(255,255,230,0.9); /* Полупрозрачный цвет фона */
+    font-family: Arial, sans-serif; /* Гарнитура шрифта */
+    font-size: 11px; /* Размер текста подсказки */
+    padding: 5px 10px; /* Поля */
+    border: 1px solid #333; /* Параметры рамки */
+}

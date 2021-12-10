@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import APIServer from "../../API/APIServer";
+import Graphic from "../../components/Graphic/Graphic";
 import Table from "../../components/Table/Table";
 import classes from "./MetricDetail.module.css";
 
 function MetricDetail(){
+    let div=useRef(null)
     let { path }=useParams();
     const [begin,setBegin]=useState(-60)
     const [limits,setLimits]=useState()
+    const [events,setEvents]=useState()
     const [end,setEnd]=useState(0)
-    const [img,setImg]=useState()
 
     const columns=[
         {colTitle:"Name",colName:"name"},
@@ -21,16 +23,10 @@ function MetricDetail(){
 
     function setPeriod(beg,en){
         setLimits(undefined)
-        setImg(undefined)
+        setEvents(undefined)
         setBegin(beg)
         setEnd(en)
     }
-    useEffect(()=>{
-        const response=APIServer.getImg('/apiv1/gui/metrics/chart/1200/350/0?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
-        response.then(value =>
-            setImg(Buffer.from(value.data).toString('base64'))
-        )    
-    },[end,begin])
     useEffect(()=>{
         const response=APIServer.getContent('/apiv1/gui/metrics/limits?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
         response.then(value =>{
@@ -47,10 +43,15 @@ function MetricDetail(){
             setLimits(locLimits)
         }
         )    
+        const responseEvents=APIServer.getContent('/apiv1/gui/metrics/events?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
+        responseEvents.then(value =>{
+            setEvents(value.data)
+        }
+        )    
     },[end,begin])
-    
+
     return (
-        <div className={classes.MetricDetail}>
+        <div ref={div} className={classes.MetricDetail}>
             <h1>{path}</h1>
             <div className={classes.MetricDetailPeriods}>
             <button className={classes.MetricDetailButton} onClick={()=>{setPeriod(-2880,0)}}>Last 2 days</button>
@@ -62,9 +63,9 @@ function MetricDetail(){
             <button className={classes.MetricDetailButton} onClick={()=>{setPeriod(-60,0)}}>Last 1 hour</button>
             <button className={classes.MetricDetailButton} onClick={()=>{setPeriod(-30,0)}}>Last 30 min</button>
             </div>
-            {img==undefined
+            {events==undefined
                 ?<div>Loading...</div>
-                :<img src={"data:image/png;base64,"+img} alt="graphic"/>
+                :<Graphic data={events} width={div.current.offsetWidth-70}/>
             }
             {limits==undefined
                 ?<div>Loading...</div>

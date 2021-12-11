@@ -8,7 +8,6 @@ function onError(reason){
 }
 function DashboardAlertPanel(){
     var addRow=function(row){
-        console.log(row)
         setRows([...rows,row])
     }
     var updateRows=function(){

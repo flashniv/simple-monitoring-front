@@ -3,11 +3,43 @@ import Table from "../Table/Table";
 import APIServer from "../../API/APIServer"
 import classes from "./DashboardAlertPanel.module.css";
 
+function getTimeAgo(inputDate){
+    const startDate=new Date(inputDate)
+    const minutesAgo=(Date.now()-startDate)/60000
+    if(minutesAgo<3){
+        return "just now"
+    }else if(minutesAgo<7){
+        return "a few minutes"
+    }else if(minutesAgo<10){
+        return "less 10 minutes"
+    }else if(minutesAgo<30){
+        return "less 30 minutes"
+    }else if(minutesAgo<60){
+        return "less an hour"
+    }else if(minutesAgo<120){
+        return "less an 2 hours"
+    }else if(minutesAgo<360){
+        return "less an 6 hours"
+    }else if(minutesAgo<720){
+        return "less an 12 hours"
+    }else if(minutesAgo<1440){
+        return "today"
+    }else if(minutesAgo<2880){
+        return "yesterday"
+    }else if(minutesAgo<10080){
+        return "current week"
+    }else if(minutesAgo<43200){
+        return "current mounth"
+    }
+    return "too old"
+}
+
 function onError(reason){
     console.error(reason)
 }
 function DashboardAlertPanel(){
     var addRow=function(row){
+        row.startDate=getTimeAgo(row.startDate)
         setRows([...rows,row])
     }
     var updateRows=function(){

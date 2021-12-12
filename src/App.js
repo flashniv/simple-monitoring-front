@@ -7,6 +7,8 @@ import Metrics from "./pages/Metrics/Metrics";
 import MetricDetail from "./pages/MetricDetail/MetricDetail";
 import History from "./pages/History/History";
 import Login from "./pages/Login/Login";
+import AlertFilters from "./pages/AlertFilters/AlertFilters";
+import Logout from "./components/Logout/Logout";
 
 function App() {
     return (
@@ -23,7 +25,9 @@ function App() {
                         <Route path=":path" element={<MetricDetail />} />
                     </Route>
                     <Route path="/history" element={<History />} />
+                    <Route path="/alertFilters" element={<AlertFilters />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/logout" element={<Logout />} />
                 </Routes>
             </div>
 

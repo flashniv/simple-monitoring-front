@@ -6,3 +6,26 @@
         border: 1px solid rgb(220, 226, 229);
         /* border-radius: 15px; */    
 }
+.AlertFiltersButton{
+        background-color: rgb(185, 0, 0);
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 6px;
+}
+.AlertFiltersDiv{
+        margin-bottom: 5px;
+        padding: 15px;
+
+        background-color: white;
+        border: 1px solid rgb(220, 226, 229);
+        /* border-radius: 15px; */    
+        
+}
+.AlertFiltersInput{
+        height: 30px;
+        width: 350px;
+        margin-right: 10px;
+        font-size: large;    
+}

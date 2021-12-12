@@ -19,10 +19,25 @@ export default class APIServer {
     static setLoggedIn(val){
         return localStorage.setItem('loggedIn',val)
     }
+    static setLoggedOut(){
+        localStorage.setItem('loggedIn',null)
+        localStorage.setItem('userLogin',null)
+        localStorage.setItem('userPassword',null)
+    }
 
     static async getContent(path) {
         console.log(this.URL+path)
         const response = await axios.get(this.URL+path,{
+            auth: {
+                username: this.getUser(),
+                password: this.getPassword()
+              }
+        })
+        return response;
+    }
+    static async postContent(path,data) {
+        console.log("post "+this.URL+path)
+        const response = await axios.post(this.URL+path,data,{
             auth: {
                 username: this.getUser(),
                 password: this.getPassword()

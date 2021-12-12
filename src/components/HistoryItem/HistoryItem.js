@@ -50,7 +50,7 @@ function HistoryItem({alert}){
     const startDate=new Date(alert.startDate)
     
     return (
-        <div className={classes.HistoryItem} style={alert.stopDate==undefined?{backgroundColor:"rgb(255, 200, 200)"}:{backgroundColor:"rgb(219, 253, 219)"}}>
+        <div className={alert.stopDate==undefined?classes.HistoryItemAlerted:classes.HistoryItemNormal}>
             <div><b>{alert.host}</b> - {alert.triggerDescription}</div>
             <div className={classes.HistoryItemDate} data-title={startDate.toLocaleString()}>{getTimeAgo(alert.startDate)+"  "+getDuration(alert.startDate,alert.stopDate)}</div>
         </div>

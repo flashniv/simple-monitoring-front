@@ -46,9 +46,9 @@ function History() {
         setAlerts([...newArray])
     }
 
-    var clearFilter = function(){
-        onlyAlerted.current.checked=false
-        filter.current.value=""
+    var clearFilter = function () {
+        onlyAlerted.current.checked = false
+        filter.current.value = ""
         updateFilters()
     }
 
@@ -66,20 +66,21 @@ function History() {
     return (
         <>
             {APIServer.isLoggedIn()
-                ?
-                <div className={classes.History}>
+                ? <>
                     <div className={classes.HistoryFilter}>
-                            <input className={classes.HistoryFilterInputCheck} ref={onlyAlerted} type="checkbox" onChange={updateFilters} />
-                            <input className={classes.HistoryFilterInputText} ref={filter} placeholder="Search..." type="text" onChange={updateFilters} />
-                            <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
+                        <input className={classes.HistoryFilterInputCheck} ref={onlyAlerted} type="checkbox" onChange={updateFilters} />
+                        <input className={classes.HistoryFilterInputText} ref={filter} placeholder="Search..." type="text" onChange={updateFilters} />
+                        <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
                     </div>
-                    {!rawAlerts.length
-                        ? <div>Loading...</div>
-                        : alerts.map(alerti =>
-                            <HistoryItem alert={alerti} key={alerti.id} />
-                        )
-                    }
-                </div>
+                    <div className={classes.History}>
+                        {!rawAlerts.length
+                            ? <div>Loading...</div>
+                            : alerts.map(alerti =>
+                                <HistoryItem alert={alerti} key={alerti.id} />
+                            )
+                        }
+                    </div>
+                </>
                 : <Navigate to="/login" />
             }
         </>

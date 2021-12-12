@@ -1,7 +1,8 @@
 .NavBar {
-    background-color: lightgreen;
-    border: 1px solid green;
-    border-radius: 15px;
-    margin: 8px;
+    background-color: rgb(10, 70, 106);
+    /* border: 1px solid rgb(10, 70, 106); */
+    /* border-radius: 15px; */
+    /* margin: 8px; */
+    margin-bottom: 8px;
     padding: 10px;
 }

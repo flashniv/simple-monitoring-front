@@ -1,10 +1,38 @@
-.HistoryItem{
+.HistoryItemNormal{
     padding: 10px 15px;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
+    background-color: #00ff0033;
     display: flex;
     justify-content: space-between;
-    border-radius: 15px;
-    border: 1px solid grey;
+    /* border-radius: 15px; */
+    border-bottom: 1px solid lightgray;
+}
+.HistoryItemNormal:hover{
+    padding: 10px 15px;
+    /* margin-bottom: 5px; */
+    background-color: #00ff0063;
+    display: flex;
+    justify-content: space-between;
+    /* border-radius: 15px; */
+    border-bottom: 1px solid lightgray;
+}
+.HistoryItemAlerted{
+    padding: 10px 15px;
+    /* margin-bottom: 5px; */
+    display: flex;
+    background-color: #ff000033;
+    justify-content: space-between;
+    /* border-radius: 15px; */
+    border-bottom: 1px solid lightgray;
+}
+.HistoryItemAlerted:hover{
+    padding: 10px 15px;
+    /* margin-bottom: 5px; */
+    display: flex;
+    background-color: #ff000063;
+    justify-content: space-between;
+    /* border-radius: 15px; */
+    border-bottom: 1px solid lightgray;
 }
 .HistoryItemDate:hover::before{
     content: attr(data-title);

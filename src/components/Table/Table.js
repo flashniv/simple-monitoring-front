@@ -27,11 +27,11 @@ function Table({columns,rows}){
     return (
         <table className={classes.Table}>
             <thead>
-                <TableRow row={cols} type="th" />
+                <TableRow columns={columns} row={cols} type="th" />
             </thead>
             <tbody>
                 {matr.map((row,index) =>
-                    <TableRow row={row} type="td" key={index}/>
+                    <TableRow columns={columns} row={row} type="td" key={index}/>
                 )}
             </tbody>
         </table>

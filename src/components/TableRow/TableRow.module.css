@@ -1,3 +1,9 @@
 .TableRow:hover{
     background-color: #0000ff09;
 }
+
+@media only screen and (max-width:600px) {
+    .TableRow:nth-child(2n){
+        background-color: #0000ff19;
+    }
+}

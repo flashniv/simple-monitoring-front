@@ -38,17 +38,17 @@ function onError(reason){
     console.error(reason)
 }
 function DashboardAlertPanel(){
-    var addRow=function(row){
-        row.startDate=getTimeAgo(row.startDate)
-        setRows([...rows,row])
-    }
     var updateRows=function(){
         console.log("update dashboard alerts")
         const response=APIServer.getContent('/apiv1/gui/dashboard/currentProblems')
         response.then((value)=>{
-            value.data.map(jsonAlert =>
-                addRow(jsonAlert)
+            let newRows=[]
+            value.data.map(jsonAlert =>{
+                jsonAlert.startDate=getTimeAgo(jsonAlert.startDate)
+                newRows.push(jsonAlert)
+            }
             )
+            setRows(newRows)
         },onError)
     }
         // {

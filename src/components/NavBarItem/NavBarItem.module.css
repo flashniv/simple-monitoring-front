@@ -21,3 +21,16 @@
     padding: 5px 20px;
     margin: 0px 3px;
 }
+
+@media only screen and (max-width: 600px) {
+    .NavBarItem{
+        display: block;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+    .NavBarItem:hover{
+        display: block;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+}    

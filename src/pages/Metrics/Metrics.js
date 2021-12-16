@@ -37,7 +37,7 @@ function Metrics() {
             return true
         }
         )
-        setMetrics([...newArray])
+        setMetrics(newArray)
     }
     var clearFilter = function () {
         filter.current.value = ""
@@ -58,7 +58,7 @@ function Metrics() {
                         <button className={classes.MetricsFilterButton} onClick={clearFilter}>Clear</button>
                     </div>
                     <div className={classes.Metrics}>
-                        {metrics.map(metric =>
+                        {metrics.map((metric) =>
                             <Metric text={metric} key={metric} />
                         )}
                     </div>

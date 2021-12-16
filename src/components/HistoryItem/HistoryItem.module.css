@@ -1,47 +1,71 @@
 .HistoryItemNormal{
     padding: 10px 15px;
-    /* margin-bottom: 5px; */
     background-color: #00ff0033;
-    display: flex;
-    justify-content: space-between;
-    /* border-radius: 15px; */
     border-bottom: 1px solid lightgray;
 }
 .HistoryItemNormal:hover{
     padding: 10px 15px;
-    /* margin-bottom: 5px; */
     background-color: #00ff0063;
-    display: flex;
-    justify-content: space-between;
-    /* border-radius: 15px; */
     border-bottom: 1px solid lightgray;
 }
 .HistoryItemAlerted{
     padding: 10px 15px;
-    /* margin-bottom: 5px; */
-    display: flex;
     background-color: #ff000033;
-    justify-content: space-between;
-    /* border-radius: 15px; */
     border-bottom: 1px solid lightgray;
 }
 .HistoryItemAlerted:hover{
     padding: 10px 15px;
-    /* margin-bottom: 5px; */
-    display: flex;
     background-color: #ff000063;
-    justify-content: space-between;
-    /* border-radius: 15px; */
     border-bottom: 1px solid lightgray;
 }
-.HistoryItemDate:hover::before{
-    content: attr(data-title);
-    position: relative; /* Абсолютное позиционирование */
-    left: 50%; top: -200%; /* Положение подсказки */
-    z-index: 1; /* Отображаем подсказку поверх других элементов */
-    background: rgba(255,255,230,0.9); /* Полупрозрачный цвет фона */
-    font-family: Arial, sans-serif; /* Гарнитура шрифта */
-    font-size: 11px; /* Размер текста подсказки */
-    padding: 5px 10px; /* Поля */
-    border: 1px solid #333; /* Параметры рамки */
+.HistoryItemDate{
+    display: inline-block;
+    width: 200px;
+}
+.Host{
+    display: inline-block;
+    font-weight: bold;
+}
+.TriggerDescription{
+    display: inline-block;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width:600px) {
+    .HistoryItemNormal{
+        padding: 10px 15px;
+        background-color: #00ff0033;
+        border-bottom: unset;
+        margin-bottom: 10px;
+    }
+    .HistoryItemNormal:hover{
+        padding: 10px 15px;
+        background-color: #00ff0063;
+        border-bottom: unset;
+        margin-bottom: 10px;
+    }
+    .HistoryItemAlerted{
+        padding: 10px 15px;
+        background-color: #ff000033;
+        border-bottom: unset;
+        margin-bottom: 10px;
+    }
+    .HistoryItemAlerted:hover{
+        padding: 10px 15px;
+        background-color: #ff000063;
+        border-bottom: unset;
+        margin-bottom: 10px;
+    }
+    .HistoryItemDate{
+        display: block;
+    }
+    .Host{
+        display: block;
+        font-weight: bold;
+        word-break: break-all;
+    }
+    .TriggerDescription{
+        display: block;
+        margin-left: unset;
+    }        
 }

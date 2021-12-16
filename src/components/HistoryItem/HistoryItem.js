@@ -51,8 +51,9 @@ function HistoryItem({alert}){
     
     return (
         <div className={alert.stopDate==undefined?classes.HistoryItemAlerted:classes.HistoryItemNormal}>
-            <div><b>{alert.host}</b> - {alert.triggerDescription}</div>
-            <div className={classes.HistoryItemDate} data-title={startDate.toLocaleString()}>{getTimeAgo(alert.startDate)+"  "+getDuration(alert.startDate,alert.stopDate)}</div>
+            <div className={classes.HistoryItemDate} title={startDate.toLocaleString()}>{getTimeAgo(alert.startDate)+"  "+getDuration(alert.startDate,alert.stopDate)}</div>
+            <div className={classes.Host}>{alert.host}</div>
+            <div className={classes.TriggerDescription}>{alert.triggerDescription}</div>
         </div>
     );
 }

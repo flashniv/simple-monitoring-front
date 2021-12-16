@@ -1,29 +1,24 @@
-.Metric{
-    
-}
 .MetricLink{
-    width: 100%;
-    display: inline-block;
-    /* background-color: #F0F0F0; */
+    display: block;
     padding: 5px 15px;
-    /* margin-bottom: 5px; */
     text-decoration: none;
-    color: black;
-    font-size: x-large;
-    font-weight: lighter;
     border-bottom: 1px solid #E0E0E0;
-    /* border-radius: 15px; */
+    /* white-space: nowrap; */
+    color:black;
+    font-size: large;
 }
 .MetricLink:hover{
-    width: 100%;
-    display: inline-block;
+    display: block;
     background-color: rgb(232, 245, 255);
     padding: 5px 15px;
-    /* margin-bottom: 5px; */
     text-decoration: none;
-    color: black;
-    font-size: x-large;
-    font-weight: lighter;
     border-bottom: 1px solid #E0E0E0;
-    /* border-radius: 15px; */
+    /* white-space: nowrap; */
+    color:black;
+    font-size: large;
+}
+.Span{
+    display: inline-block;
+    margin: 0px 5px;
+    color: rgb(184, 184, 184);
 }

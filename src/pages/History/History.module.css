@@ -14,6 +14,7 @@
 .HistoryFilterInputText{
     height: 30px;
     width: 350px;
+    margin-left: 15px;
     font-size: large;
 }
 .HistoryFilterButton{
@@ -25,34 +26,39 @@
 .HistoryFilterInputCheck{
     transform: scale(2);
     margin-right: 10px;
-    margin-left: 5px;
+    margin-left: 15px;
+}
+.FilterDiv{
+    display: inline;
 }
 
 @media only screen and (max-width:600px){
-    .HistoryFilter{
-        display: flex;
+        .FilterDiv{
+            display: block;
+        }
+        .HistoryFilter{
+        display: block;
         padding: 15px;
         margin-bottom: 5px;
         background-color: white;
         border: 1px solid rgb(220, 226, 229);
-        vertical-align: middle;
     }
     .HistoryFilterInputText{
         height: 30px;
-        /* width: 350px; */
+        width: 80%;
+        margin-left: 0px;
         font-size: large;
     }
     .HistoryFilterButton{
         height: 30px;
-        /* width: 100px; */
+        width: 18%;
         margin-left: 5px;
         font-size: large;
     }
     .HistoryFilterInputCheck{
         transform: scale(2);
-        margin-right: 10px;
-        margin-left: 5px;
+        margin: 10px 15px;
         position: relative;
-        top: 8px;
+        top: 0px;
     }
 }

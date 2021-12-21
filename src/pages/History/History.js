@@ -12,6 +12,7 @@ var rawAlerts = []
 
 function History() {
     const onlyAlerted = useRef(null)
+    const onlyFiltered = useRef(null)
     const filter = useRef(null)
     const [alerts, setAlerts] = useState([])
 
@@ -33,6 +34,9 @@ function History() {
 
     var updateFilters = function () {
         var newArray = rawAlerts.filter(alert => {
+            if (onlyFiltered.current.checked && alert.isFiltered) {
+                return false
+            }
             if (onlyAlerted.current.checked && alert.stopDate != null) {
                 return false
             }
@@ -68,9 +72,16 @@ function History() {
             {APIServer.isLoggedIn()
                 ? <>
                     <div className={classes.HistoryFilter}>
-                        <input className={classes.HistoryFilterInputCheck} ref={onlyAlerted} type="checkbox" onChange={updateFilters} />
-                        <input className={classes.HistoryFilterInputText} ref={filter} placeholder="Search..." type="text" onChange={updateFilters} />
-                        <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
+                        <div className={classes.FilterDiv}>
+                            <input id="onlyFiltered" className={classes.HistoryFilterInputCheck} ref={onlyFiltered} defaultChecked="true" type="checkbox" onChange={updateFilters} />
+                            <label htmlFor="onlyFiltered">Filter</label>
+                            <input id="onlyAlerted" className={classes.HistoryFilterInputCheck} ref={onlyAlerted} type="checkbox" onChange={updateFilters} />
+                            <label htmlFor="onlyAlerted">Only alerted</label>
+                        </div>
+                        <div className={classes.FilterDiv}>
+                            <input className={classes.HistoryFilterInputText} ref={filter} placeholder="Search..." type="text" onChange={updateFilters} />
+                            <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
+                        </div>
                     </div>
                     <div className={classes.History}>
                         {!rawAlerts.length

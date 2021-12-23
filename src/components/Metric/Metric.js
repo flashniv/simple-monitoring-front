@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import classes from "./Metric.module.css";
 
 function Metric(props) {
@@ -9,7 +9,7 @@ function Metric(props) {
         <Link className={classes.MetricLink} to={link}>
             {pathParts.map((part, index) =>
                 <>
-                    {index != 0
+                    {index !== 0
                         ? <span className={classes.Span}>/</span>
                         : <></>
                     }

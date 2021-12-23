@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, {useRef} from "react";
 import NavBarItem from "../NavBarItem/NavBarItem";
 import classes from "./NavBar.module.css";
 
@@ -7,7 +7,7 @@ function NavBar() {
     
     var showMenu=function(){
         let display=bar.current.style.display;
-        if(display.localeCompare("")==0 || display.localeCompare("none")==0){
+        if(display.localeCompare("")===0 || display.localeCompare("none")===0){
             bar.current.style.display="block"
         }else{
             bar.current.style.display="none"

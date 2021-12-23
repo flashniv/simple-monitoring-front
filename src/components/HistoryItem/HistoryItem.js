@@ -32,7 +32,7 @@ function getTimeAgo(inputDate){
     return "too old"
 }
 function getDuration(startTime,stopTime){
-    if(stopTime==undefined) return ""
+    if(stopTime===undefined) return ""
     const startDate=new Date(startTime)
     const stopDate=new Date(stopTime)
     
@@ -50,7 +50,7 @@ function HistoryItem({alert}){
     const startDate=new Date(alert.startDate)
     
     return (
-        <div className={alert.stopDate==undefined?classes.HistoryItemAlerted:classes.HistoryItemNormal}>
+        <div className={alert.stopDate===undefined?classes.HistoryItemAlerted:classes.HistoryItemNormal}>
             <div className={classes.HistoryItemDate} title={startDate.toLocaleString()}>{getTimeAgo(alert.startDate)+"  "+getDuration(alert.startDate,alert.stopDate)}</div>
             <div className={classes.Host}>{alert.host}</div>
             <div className={classes.TriggerDescription}>{alert.triggerDescription}</div>

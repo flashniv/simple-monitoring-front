@@ -1,6 +1,5 @@
 import React from "react";
 import TableColumn from "../TableColumn/TableColumn";
-import TableHeadColumn from "../TableHeadColumn/TableHeadColumn";
 import classes from "./TableRow.module.css";
 
 function TableRow({columns,row,type}){

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Navigate } from "react-router";
+import {useEffect, useRef, useState} from "react";
+import {Navigate} from "react-router";
 import APIServer from "../../API/APIServer";
 import HistoryItem from "../../components/HistoryItem/HistoryItem";
 import classes from "./History.module.css";
@@ -24,7 +24,7 @@ function History() {
         const response = APIServer.getContent('/apiv1/gui/history/allProblems')
         response.then((value) => {
             rawAlerts = []
-            value.data.map(jsonAlert => {
+            value.data.forEach(jsonAlert => {
                 addAlert(jsonAlert)
             }
             )
@@ -40,7 +40,7 @@ function History() {
             if (onlyAlerted.current.checked && alert.stopDate != null) {
                 return false
             }
-            if (filter.current.value.localeCompare("") != 0) {
+            if (filter.current.value.localeCompare("") !== 0) {
                 return alert.host.includes(filter.current.value)
             }
 
@@ -64,6 +64,7 @@ function History() {
             }, 60000);
             return () => clearInterval(id);
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     )
 
@@ -86,7 +87,7 @@ function History() {
                     <div className={classes.History}>
                         {!rawAlerts.length
                             ? <div>Loading...</div>
-                            : alerts.map(alerti =>
+                            : alerts.forEach(alerti =>
                                 <HistoryItem alert={alerti} key={alerti.id} />
                             )
                         }

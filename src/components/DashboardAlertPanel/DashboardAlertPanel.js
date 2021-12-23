@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Table from "../Table/Table";
 import APIServer from "../../API/APIServer"
 import classes from "./DashboardAlertPanel.module.css";
@@ -43,7 +43,7 @@ function DashboardAlertPanel(){
         const response=APIServer.getContent('/apiv1/gui/dashboard/currentProblems')
         response.then((value)=>{
             let newRows=[]
-            value.data.map(jsonAlert =>{
+            value.data.forEach(jsonAlert =>{
                 jsonAlert.startDate=getTimeAgo(jsonAlert.startDate)
                 newRows.push(jsonAlert)
             }

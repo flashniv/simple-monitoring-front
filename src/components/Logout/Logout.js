@@ -1,5 +1,4 @@
-import react from "react";
-import { Navigate } from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import APIServer from "../../API/APIServer";
 
 function Logout(){

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Navigate } from "react-router";
+import {useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {Navigate} from "react-router";
 import APIServer from "../../API/APIServer";
 import Table from "../../components/Table/Table";
 import classes from "./AlertFilters.module.css";
@@ -11,6 +11,7 @@ function onError(reason) {
 
 function AlertFilters() {
     const [alertFilters, setAlertFilters] = useState([])
+    // eslint-disable-next-line no-unused-vars
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
     if (Object.keys(errors).length !== 0) {
@@ -46,7 +47,7 @@ function AlertFilters() {
         const response = APIServer.getContent('/apiv1/gui/configuration/alertFilters/allAlertFilters')
         response.then((value) => {
             let filters = []
-            value.data.map(alertFilter => {
+            value.data.forEach(alertFilter => {
                 alertFilter.buttons=<button className={classes.AlertFiltersButton} onClick={()=>{onDelete(alertFilter.id)}}>X</button>
                 filters.push(alertFilter)
             })
@@ -56,6 +57,7 @@ function AlertFilters() {
 
     useEffect(
         updateAlertFilters,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     )
 

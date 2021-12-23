@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useRef, useState} from "react";
+import {useParams} from 'react-router-dom';
 import APIServer from "../../API/APIServer";
 import Graphic from "../../components/Graphic/Graphic";
 import Table from "../../components/Table/Table";
@@ -50,7 +50,7 @@ function MetricDetail(){
         const response=APIServer.getContent('/apiv1/gui/metrics/limits?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
         response.then(value =>{
             let locLimits=[]
-            value.data.map(lim =>{
+            value.data.forEach(lim =>{
                 let name=JSON.parse(lim.name)
                 let newName=""
                 for (const [key, value] of Object.entries(name)) {
@@ -69,10 +69,10 @@ function MetricDetail(){
         const responseEvents=APIServer.getContent('/apiv1/gui/metrics/events?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
         responseEvents.then(value =>{
             let locEvents=[]
-            value.data.map(event =>{
+            value.data.forEach(event =>{
                 var newObj={}
-                Object.keys(event).map(key =>{
-                    if(key.localeCompare("time")==0){
+                Object.keys(event).forEach(key =>{
+                    if(key.localeCompare("time")===0){
                         newObj.time=formatDate(new Date(event.time))
                     }else{
                         let value=event[key].toFixed(3);
@@ -88,8 +88,9 @@ function MetricDetail(){
             })
             setEvents(locEvents)
         }
-        )    
-    },[end,begin])
+        )
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[end, begin])
 
     return (
         <div ref={div} className={classes.MetricDetail}>
@@ -104,11 +105,11 @@ function MetricDetail(){
             <button className={classes.MetricDetailButton} onClick={()=>{setPeriod(-60,0)}}>Last 1 hour</button>
             <button className={classes.MetricDetailButton} onClick={()=>{setPeriod(-30,0)}}>Last 30 min</button>
             </div>
-            {events==undefined
+            {events===undefined
                 ?<div>Loading...</div>
                 :<Graphic data={events} width={div.current.offsetWidth-70}/>
             }
-            {limits==undefined
+            {limits===undefined
                 ?<div>Loading...</div>
                 :<Table rows={limits} columns={columns}/>
             }

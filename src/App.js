@@ -2,7 +2,7 @@ import React from "react";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NavBar from "./components/NavBar/NavBar";
 import "./styles/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Metrics from "./pages/Metrics/Metrics";
 import MetricDetail from "./pages/MetricDetail/MetricDetail";
 import History from "./pages/History/History";
@@ -14,7 +14,7 @@ function App() {
     return (
         <BrowserRouter>
             <div className="App">
-                {window.location.pathname.localeCompare("/login")!=0
+                {window.location.pathname.localeCompare("/login")!==0
                     ?<NavBar />
                     :<></>
                 }

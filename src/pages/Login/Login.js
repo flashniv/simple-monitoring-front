@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import APIServer from "../../API/APIServer";
 import classes from "./Login.module.css";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 
 function Login(){
+    // eslint-disable-next-line no-unused-vars
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
     if(Object.keys(errors).length!==0){

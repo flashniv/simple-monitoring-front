@@ -2,7 +2,7 @@ import classes from "./Dashboard.module.css";
 import DashboardAlertPanel from "../../components/DashboardAlertPanel/DashboardAlertPanel";
 import DashboardStatusPanel from "../../components/DashboardStatusPanel/DashboardStatusPanel";
 import APIServer from "../../API/APIServer";
-import { Navigate } from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 function Dashboard(){
     return (

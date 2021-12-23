@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Navigate } from "react-router";
+import {useEffect, useRef, useState} from "react";
+import {Navigate} from "react-router";
 import APIServer from "../../API/APIServer";
 import Metric from "../../components/Metric/Metric";
 import classes from "./Metrics.module.css";
@@ -31,7 +31,7 @@ function Metrics() {
 
     var updateFilters = function () {
         var newArray = rawMetrics.filter(metric => {
-            if (filter.current.value.localeCompare("") != 0) {
+            if (filter.current.value.localeCompare("") !== 0) {
                 return metric.includes(filter.current.value)
             }
             return true

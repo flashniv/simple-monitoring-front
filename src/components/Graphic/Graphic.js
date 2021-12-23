@@ -1,6 +1,5 @@
 import React from "react";
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import classes from "./Graphic.module.css";
+import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 
 const colors=[
     "#d1b066",
@@ -109,7 +108,7 @@ function Graphic(props) {
     const data = props.data
     let row=[]
     if(data[0]!=null){
-        row = Object.keys(data[0]).filter(item => item.localeCompare("time")!=0)
+        row = Object.keys(data[0]).filter(item => item.localeCompare("time")!==0)
     }
     return (
         <LineChart width={props.width} height={400} data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5, }} >

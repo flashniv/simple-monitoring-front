@@ -14,7 +14,7 @@ export default class APIServer {
     static isLoggedIn(){
         const loggedIn=localStorage.getItem('loggedIn')
         if(loggedIn==null) return false
-        return loggedIn.localeCompare('true')==0
+        return loggedIn.localeCompare('true')===0
     }
     static setLoggedIn(val){
         return localStorage.setItem('loggedIn',val)

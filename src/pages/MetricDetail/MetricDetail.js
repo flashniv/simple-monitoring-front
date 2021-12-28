@@ -5,8 +5,17 @@ import Graphic from "../../components/Graphic/Graphic";
 import Table from "../../components/Table/Table";
 import classes from "./MetricDetail.module.css";
 
+function getPrecision(n) {
+    for(var i = 0; n > 9000; i++) {
+        n /= 1000;
+    }
+    return i;
+}
+
+const multipliers=["","K","M","G","T","E","P"]
+
 function formatDate(date) {
-    var month = '' + (date.getMonth() + 1),
+    let month = '' + (date.getMonth() + 1),
         day = '' + date.getDate(),
         year = date.getFullYear(),
         minutes = ''+date.getMinutes(),
@@ -47,9 +56,18 @@ function MetricDetail(){
         setEnd(en)
     }
     useEffect(()=>{
+        let precision=0
         const response=APIServer.getContent('/apiv1/gui/metrics/limits?path='+path+'&beginPeriod='+begin+'&endPeriod='+end)
         response.then(value =>{
             let locLimits=[]
+            let max=0
+            value.data.forEach(lim =>{
+                const limMax=Math.abs(lim.max)
+                if(max<limMax){
+                    max=limMax
+                }
+            })
+            precision=getPrecision(max)
             value.data.forEach(lim =>{
                 let name=JSON.parse(lim.name)
                 let newName=""
@@ -57,10 +75,10 @@ function MetricDetail(){
                     newName+=key+":"+value+" ";
                 }
                 lim.name=newName
-                lim.min=lim.min.toFixed(3)
-                lim.max=lim.max.toFixed(3)
-                lim.last=lim.last.toFixed(3)
-                lim.avg=lim.avg.toFixed(3)
+                lim.min=(lim.min/Math.pow(1000,precision)).toFixed(3)+' '+multipliers[precision]
+                lim.max=(lim.max/Math.pow(1000,precision)).toFixed(3)+' '+multipliers[precision]
+                lim.avg=(lim.avg/Math.pow(1000,precision)).toFixed(3)+' '+multipliers[precision]
+                lim.last=(lim.last/Math.pow(1000,precision)).toFixed(3)+' '+multipliers[precision]
                 locLimits.push(lim)
             })
             setLimits(locLimits)
@@ -70,12 +88,12 @@ function MetricDetail(){
         responseEvents.then(value =>{
             let locEvents=[]
             value.data.forEach(event =>{
-                var newObj={}
+                let newObj={}
                 Object.keys(event).forEach(key =>{
                     if(key.localeCompare("time")===0){
                         newObj.time=formatDate(new Date(event.time))
                     }else{
-                        let value=event[key].toFixed(3);
+                        let value=(event[key]/Math.pow(1000,precision)).toFixed(3);
                         let newKey=""
                         key=JSON.parse(key)
                         for (const [name, value] of Object.entries(key)) {

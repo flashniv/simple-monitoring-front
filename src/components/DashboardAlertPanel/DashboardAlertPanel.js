@@ -29,7 +29,7 @@ function getTimeAgo(inputDate){
     }else if(minutesAgo<10080){
         return "current week"
     }else if(minutesAgo<43200){
-        return "current mounth"
+        return "current month"
     }
     return "too old"
 }

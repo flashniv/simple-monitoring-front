@@ -24,25 +24,25 @@ function AlertFilters() {
         { colTitle: "", colName: "buttons" }
     ]
 
-    var onAdd = function (data){
+    const onAdd = function (data){
         const response=APIServer.postContent('/apiv1/gui/configuration/alertFilters/addAlertFilter',data)
-        response.then((value)=>{
+        response.then(()=>{
             updateAlertFilters()
             console.log("Add success")
         },onError)
 }
 
-    var onDelete = function (data) {
+    const onDelete = function (data) {
         if(window.confirm("Delete it?")){
             const response=APIServer.postContent('/apiv1/gui/configuration/alertFilters/deleteAlertFilter',{id:data})
-            response.then((value)=>{
+            response.then(()=>{
                 updateAlertFilters()
                 console.log("Delete success")
             },onError)
         }
     }
 
-    var updateAlertFilters = function () {
+    const updateAlertFilters = function () {
         console.log("update AlertFilters")
         const response = APIServer.getContent('/apiv1/gui/configuration/alertFilters/allAlertFilters')
         response.then((value) => {

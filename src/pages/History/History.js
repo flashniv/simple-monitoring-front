@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {Navigate} from "react-router";
 import APIServer from "../../API/APIServer";
 import HistoryItem from "../../components/HistoryItem/HistoryItem";
@@ -8,53 +8,42 @@ function onError(reason) {
     console.error(reason)
 }
 
-var rawAlerts = []
-
-function History() {
-    const onlyAlerted = useRef(null)
-    const onlyFiltered = useRef(null)
-    const filter = useRef(null)
+export default function History() {
+    const [onlyAlerted,setOnlyAlerted] = useState(false)
+    const [onlyFiltered,setOnlyFiltered] = useState(true)
+    const [filter,setFilter] = useState("")
     const [alerts, setAlerts] = useState([])
 
-    var addAlert = function (newAlert) {
-        rawAlerts = [...rawAlerts, newAlert]
-    }
-    var updateHistory = function () {
+    const updateHistory = function () {
         console.log("update History")
         const response = APIServer.getContent('/apiv1/gui/history/allProblems')
         response.then((value) => {
-            rawAlerts = []
-            value.data.forEach(jsonAlert => {
-                addAlert(jsonAlert)
-            }
-            )
-            updateFilters()
+            setAlerts(value.data)
         }, onError)
-    }
+    };
 
-    var updateFilters = function () {
-        var newArray = rawAlerts.filter(alert => {
-            if (onlyFiltered.current.checked && alert.isFiltered) {
-                return false
-            }
-            if (onlyAlerted.current.checked && alert.stopDate != null) {
-                return false
-            }
-            if (filter.current.value.localeCompare("") !== 0) {
-                return alert.host.includes(filter.current.value)
-            }
+    const getFiltered = function () {
+        return alerts.filter(alert => {
+                if (onlyFiltered && alert.isFiltered) {
+                    return false
+                }
+                if (onlyAlerted && alert.stopDate != null) {
+                    return false
+                }
+                if (filter.localeCompare("") !== 0) {
+                    return alert.host.includes(filter)
+                }
 
-            return true
-        }
+                return true
+            }
         )
-        setAlerts([...newArray])
-    }
+    };
 
-    var clearFilter = function () {
-        onlyAlerted.current.checked = false
-        filter.current.value = ""
-        updateFilters()
-    }
+    const clearFilter = function () {
+        setOnlyAlerted(false)
+        setOnlyFiltered(true)
+        setFilter("")
+    };
 
     useEffect(
         () => {
@@ -74,29 +63,29 @@ function History() {
                 ? <>
                     <div className={classes.HistoryFilter}>
                         <div className={classes.FilterDiv}>
-                            <input id="onlyFiltered" className={classes.HistoryFilterInputCheck} ref={onlyFiltered} defaultChecked="true" type="checkbox" onChange={updateFilters} />
+                            <input id="onlyFiltered" className={classes.HistoryFilterInputCheck}
+                                   checked={onlyFiltered} type="checkbox" onChange={()=>setOnlyFiltered(!onlyFiltered)}/>
                             <label htmlFor="onlyFiltered">Filter</label>
-                            <input id="onlyAlerted" className={classes.HistoryFilterInputCheck} ref={onlyAlerted} type="checkbox" onChange={updateFilters} />
+                            <input id="onlyAlerted" className={classes.HistoryFilterInputCheck}
+                                   checked={onlyAlerted} type="checkbox" onChange={()=>setOnlyAlerted(!onlyAlerted)}/>
                             <label htmlFor="onlyAlerted">Only alerted</label>
                         </div>
                         <div className={classes.FilterDiv}>
-                            <input className={classes.HistoryFilterInputText} ref={filter} placeholder="Search..." type="text" onChange={updateFilters} />
+                            <input className={classes.HistoryFilterInputText} value={filter} placeholder="Search..."
+                                   type="text" onChange={(e)=>{setFilter(e.target.value)}}/>
                             <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
                         </div>
                     </div>
                     <div className={classes.History}>
-                        {!rawAlerts.length
+                        {!alerts.length
                             ? <div>Loading...</div>
-                            : alerts.forEach(alerti =>
-                                <HistoryItem alert={alerti} key={alerti.id} />
+                            : getFiltered().map(alerti => <HistoryItem alert={alerti} key={alerti.id}/>
                             )
                         }
                     </div>
                 </>
-                : <Navigate to="/login" />
+                : <Navigate to="/login"/>
             }
         </>
     );
 }
-
-export default History;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default class APIServer {
-    static URL='___SERVER___'
+    static URL=process.env.REACT_APP_API_URL
     //static URL='http://localhost:8080'
 
     static getUser(){

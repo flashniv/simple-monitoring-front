@@ -3,6 +3,7 @@ import axios from "axios";
 export default class APIServer {
     static URL=process.env.REACT_APP_API_URL
     //static URL='http://localhost:8080'
+    static URL='https://simple.flash.biz.ua'
 
     static getUser(){
         return localStorage.getItem('userLogin')
@@ -27,33 +28,30 @@ export default class APIServer {
 
     static async getContent(path) {
         console.log(this.URL+path)
-        const response = await axios.get(this.URL+path,{
+        return await axios.get(this.URL + path, {
             auth: {
                 username: this.getUser(),
                 password: this.getPassword()
-              }
-        })
-        return response;
+            }
+        });
     }
     static async postContent(path,data) {
         console.log("post "+this.URL+path)
-        const response = await axios.post(this.URL+path,data,{
+        return await axios.post(this.URL + path, data, {
             auth: {
                 username: this.getUser(),
                 password: this.getPassword()
-              }
-        })
-        return response;
+            }
+        });
     }
     static async getImg(path) {
         console.log(this.URL+path)
-        const response = await axios.get(this.URL+path,{
+        return await axios.get(this.URL + path, {
             auth: {
                 username: this.getUser(),
                 password: this.getPassword()
             },
             responseType: 'arraybuffer'
-        })
-        return response;
+        });
     }
 }

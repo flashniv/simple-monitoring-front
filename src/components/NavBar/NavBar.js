@@ -1,34 +1,36 @@
 import React, {useRef} from "react";
-import NavBarItem from "../NavBarItem/NavBarItem";
-import classes from "./NavBar.module.css";
+import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
+import {useNavigate} from "react-router";
 
-function NavBar() {
-    const bar=useRef(null)
-    
-    var showMenu=function(){
-        let display=bar.current.style.display;
-        if(display.localeCompare("")===0 || display.localeCompare("none")===0){
-            bar.current.style.display="block"
-        }else{
-            bar.current.style.display="none"
-        }
+function NavBar({loggedIn}) {
+    const navigate = useNavigate()
+
+    const onClick = function (path) {
+        navigate(path, {replace: false});
     }
 
     return (
-        <>
-            <div ref={bar} className={classes.NavBar}>
-                <div>
-                    <NavBarItem href={"/"} text={"SM"} />
-                    <NavBarItem href={"/metrics"} text={"Metrics"} />
-                    <NavBarItem href={"/history"} text={"History"} />
-                    <NavBarItem href={"/alertFilters"} text={"Alert filters"} />
-                </div>
-                <div>
-                    <NavBarItem href={"/logout"} text={"Logout"} />
-                </div>
-            </div>
-            <div onClick={showMenu} className={classes.ShowMenuButton}>Menu ⇵</div>
-        </>
+        <AppBar position="static">
+            <Toolbar>
+                <Typography variant="h6" component="div" sx={{mr: 2}}>
+                    SimpleMonitoring
+                </Typography>
+                {loggedIn
+                    ? <>
+                        <Button color="inherit" onClick={() => onClick("/dashboard")}>Dashboard</Button>
+                        <Button color="inherit" onClick={() => onClick("/metrics")}>Metrics</Button>
+                        <Button color="inherit" onClick={() => onClick("/history")}>History</Button>
+                        <Button color="inherit" onClick={() => onClick("/alertFilters")}>Alert filters</Button>
+                        <Box sx={{flexGrow: 1}}/>
+                        <Button color="inherit" onClick={() => onClick("/logout")}>Logout</Button>
+                    </>
+                    : <>
+                        <Box sx={{flexGrow: 1}}/>
+                        <Button color="inherit" onClick={() => onClick("/signin")}>Sign In</Button>
+                    </>
+                }
+            </Toolbar>
+        </AppBar>
     );
 }
 

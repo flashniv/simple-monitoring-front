@@ -1,10 +1,11 @@
 import {Navigate} from "react-router-dom";
 import APIServer from "../../API/APIServer";
 
-function Logout(){
+function Logout({setLoggedIn}){
     APIServer.setLoggedOut()
+    setLoggedIn(false)
     return(
-        <Navigate to="/login" />
+        <Navigate to="/signin" />
     )
 }
 

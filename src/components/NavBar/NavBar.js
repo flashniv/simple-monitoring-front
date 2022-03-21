@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React from "react";
 import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import {useNavigate} from "react-router";
 
@@ -17,16 +17,16 @@ function NavBar({loggedIn}) {
                 </Typography>
                 {loggedIn
                     ? <>
-                        <Button color="inherit" onClick={() => onClick("/dashboard")}>Dashboard</Button>
-                        <Button color="inherit" onClick={() => onClick("/metrics")}>Metrics</Button>
-                        <Button color="inherit" onClick={() => onClick("/history")}>History</Button>
-                        <Button color="inherit" onClick={() => onClick("/alertFilters")}>Alert filters</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main",mr:1}} onClick={() => onClick("/dashboard")}>Dashboard</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main",mr:1}} onClick={() => onClick("/metrics")}>Metrics</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main",mr:1}} onClick={() => onClick("/history")}>History</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main"}} onClick={() => onClick("/alertFilters")}>Alert filters</Button>
                         <Box sx={{flexGrow: 1}}/>
-                        <Button color="inherit" onClick={() => onClick("/logout")}>Logout</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main"}} onClick={() => onClick("/logout")}>Logout</Button>
                     </>
                     : <>
                         <Box sx={{flexGrow: 1}}/>
-                        <Button color="inherit" onClick={() => onClick("/signin")}>Sign In</Button>
+                        <Button color="inherit" sx={{ backgroundColor:"secondary.main"}} onClick={() => onClick("/signin")}>Sign In</Button>
                     </>
                 }
             </Toolbar>

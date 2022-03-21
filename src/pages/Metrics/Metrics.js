@@ -2,37 +2,21 @@ import {useEffect, useState} from "react";
 import APIServer from "../../API/APIServer";
 import Metric from "../../components/Metric/Metric";
 import {DataGrid} from "@mui/x-data-grid";
-import {Button} from "@mui/material";
-import {useNavigate} from "react-router";
 
 function Metrics() {
     const [metrics, setMetrics] = useState([])
-    const navigate=useNavigate()
     const onError=function (reason) {
         console.error(reason)
     }
 
-    const onOpen= function (path) {
-        navigate("/metricDetail/"+path, { replace: false });
-    }
     const columns = [
         {
             field: 'path',
             headerName: 'Metric',
             width: window.innerWidth-35,
             editable: false,
-            renderCell: (params) => (<>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        style={{ marginRight: 16 }}
-                        onClick={()=>{onOpen(params.value)}}
-                    >
-                        Open
-                    </Button>
-                    {params.value}
-                </>
+            renderCell: (params) => (
+                <Metric text={params.value} />
             ),
         }
     ];

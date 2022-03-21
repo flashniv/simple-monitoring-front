@@ -126,8 +126,10 @@ export default function History() {
         filtered.map((value => {
             value.timeAgo = getTimeAgo(value.startDate)
             value.duration = getDuration(value.startDate, value.stopDate)
+            value.status=value.stopDate===undefined;
             res.push(value)
         }))
+        console.log(res)
         return res
     };
 
@@ -178,7 +180,19 @@ export default function History() {
                     ? <div>Loading...</div>
                     : <DataGrid
                         sx={{
-                            fontSize: "larger"
+                            fontSize: "larger",
+                            '& .grid--true': {
+                                bgcolor: "#ffbcbc",
+                                '&:hover': {
+                                    bgcolor: "#ff9c9c",
+                                },
+                            },
+                            '& .grid--false': {
+                                bgcolor: "#c1e5af",
+                                '&:hover': {
+                                    bgcolor: "#93d974",
+                                },
+                            },
                         }}
                         rows={getFiltered()}
                         columns={columns}
@@ -187,6 +201,7 @@ export default function History() {
                         rowHeight={35}
                         disableSelectionOnClick={true}
                         getRowId={(row) => row.id}
+                        getRowClassName={(params) => `grid--${params.row.status}`}
                     />
                 }
             </Box>

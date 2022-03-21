@@ -1,47 +1,48 @@
-import {useEffect, useRef, useState} from "react";
-import {Navigate} from "react-router";
+import {useEffect, useState} from "react";
 import APIServer from "../../API/APIServer";
 import Metric from "../../components/Metric/Metric";
-import classes from "./Metrics.module.css";
-
-function onError(reason) {
-    console.error(reason)
-}
-
-var rawMetrics = []
+import {DataGrid} from "@mui/x-data-grid";
+import {Button} from "@mui/material";
+import {useNavigate} from "react-router";
 
 function Metrics() {
     const [metrics, setMetrics] = useState([])
-    const filter = useRef(null)
-
-    var addMetric = function (path) {
-        rawMetrics = [...rawMetrics, path]
+    const navigate=useNavigate()
+    const onError=function (reason) {
+        console.error(reason)
     }
-    var updateMetrics = function () {
+
+    const onOpen= function (path) {
+        navigate("/metricDetail/"+path, { replace: false });
+    }
+    const columns = [
+        {
+            field: 'path',
+            headerName: 'Metric',
+            width: window.innerWidth-35,
+            editable: false,
+            renderCell: (params) => (<>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        style={{ marginRight: 16 }}
+                        onClick={()=>{onOpen(params.value)}}
+                    >
+                        Open
+                    </Button>
+                    {params.value}
+                </>
+            ),
+        }
+    ];
+
+    const updateMetrics = function () {
         console.log("update metrics")
         const response = APIServer.getContent('/apiv1/gui/metrics/allMetrics')
         response.then((value) => {
-            rawMetrics = []
-            value.data.map(jsonMetric =>
-                addMetric(jsonMetric.path)
-            )
-            updateFilters()
+            setMetrics(value.data)
         }, onError)
-    }
-
-    var updateFilters = function () {
-        var newArray = rawMetrics.filter(metric => {
-            if (filter.current.value.localeCompare("") !== 0) {
-                return metric.includes(filter.current.value)
-            }
-            return true
-        }
-        )
-        setMetrics(newArray)
-    }
-    var clearFilter = function () {
-        filter.current.value = ""
-        updateFilters()
     }
 
     useEffect(
@@ -50,22 +51,20 @@ function Metrics() {
     )
 
     return (
-        <>
-            {APIServer.isLoggedIn()
-                ? <>
-                    <div className={classes.MetricsFilter}>
-                        <input className={classes.MetricsFilterInput} ref={filter} type="text" placeholder="Search..." onChange={updateFilters} />
-                        <button className={classes.MetricsFilterButton} onClick={clearFilter}>Clear</button>
-                    </div>
-                    <div className={classes.Metrics}>
-                        {metrics.map((metric) =>
-                            <Metric text={metric} key={metric} />
-                        )}
-                    </div>
-                </>
-                : <Navigate to="/login" />
-            }
-        </>
+        <div style={{ height: 650, width: '100%' }}>
+            <DataGrid
+                sx={{
+                    fontSize:"larger"
+                }}
+                rows={metrics}
+                columns={columns}
+                pageSize={15}
+                rowsPerPageOptions={[15,50,100,200]}
+                rowHeight={35}
+                disableSelectionOnClick={true}
+                getRowId={(row) => row.path}
+            />
+        </div>
     );
 }
 

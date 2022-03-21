@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from "react";
-import Table from "../Table/Table";
 import APIServer from "../../API/APIServer"
-import classes from "./DashboardAlertPanel.module.css";
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
-import Metric from "../Metric/Metric";
 
 function getTimeAgo(inputDate) {
     const startDate = new Date(inputDate)

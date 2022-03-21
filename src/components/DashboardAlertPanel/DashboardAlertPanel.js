@@ -98,23 +98,23 @@ function DashboardAlertPanel() {
         <Box
             sx={{
                 backgroundColor: "background.paper",
-                minHeight:600,
+                minHeight: 600,
                 width: '80%',
                 p: 1,
             }}
         >
-                <DataGrid
-                    sx={{
-                        fontSize: "larger"
-                    }}
-                    rows={rows}
-                    columns={columns}
-                    pageSize={15}
-                    rowsPerPageOptions={[15, 50, 100, 200]}
-                    rowHeight={35}
-                    disableSelectionOnClick={true}
-                    getRowId={(row) => row.id}
-                />
+            <DataGrid
+                sx={{
+                    fontSize: "larger"
+                }}
+                rows={rows}
+                columns={columns}
+                pageSize={15}
+                rowsPerPageOptions={[15, 50, 100, 200]}
+                rowHeight={35}
+                disableSelectionOnClick={true}
+                getRowId={(row) => row.id}
+            />
         </Box>
     );
 }

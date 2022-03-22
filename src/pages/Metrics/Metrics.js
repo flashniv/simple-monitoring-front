@@ -1,94 +1,76 @@
 import {useEffect, useState} from "react";
 import APIServer from "../../API/APIServer";
-import {DataGrid} from "@mui/x-data-grid";
-import {Button} from "@mui/material";
 import {useNavigate} from "react-router";
+import * as React from 'react';
+import TreeView from '@mui/lab/TreeView';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TreeItem from '@mui/lab/TreeItem';
+import {makeStyles} from "@mui/styles";
+
+const onError = function (reason) {
+    console.error(reason)
+}
+const useStyles = makeStyles({
+    label: {
+        display:"flex",
+        height:35,
+        alignItems:"center"
+    }
+});
+
 
 function Metrics() {
-    const [metrics, setMetrics] = useState([])
-    const navigate=useNavigate()
-    const onError=function (reason) {
-        console.error(reason)
+    const [treeItems, setTreeItems] = useState({id: 0, name: "root", path: "", childs: {}})
+    const navigate = useNavigate()
+    const classes = useStyles();
+
+    const renderTree = (nodes) => (
+        <TreeItem
+            key={'' + nodes.id}
+            nodeId={'' + nodes.id}
+            label={nodes.name}
+            onClick={() => openDetails(nodes)}
+            classes={{ label: classes.label }}
+        >
+            {Object.keys(nodes.childs).length !== 0
+                ? Object.keys(nodes.childs).map((node) => renderTree(nodes.childs[node]))
+                : null
+            }
+        </TreeItem>
+    );
+
+    const openDetails = function (node) {
+        if (Object.keys(node.childs).length === 0) {
+            navigate("/metricDetail/" + node.path, {replace: false})
+        }
     }
-
-    const openDetails=function (path){
-        navigate("/metricDetail/"+ path,{replace:false})
-    }
-
-    const columns = [
-        {
-            field: 'path',
-            headerName: 'Detail',
-            flex:0.4,
-            editable: false,
-            renderCell: (params) => (
-                <Button
-                    onClick={()=>openDetails(params.value)}
-                    variant="contained"
-                >
-                    Open
-                </Button>
-            ),
-        },
-        {
-            field: 'level1',
-            headerName: 'Level 1',
-            flex:0.45,
-            editable: false,
-        },
-        {
-            field: 'level2',
-            headerName: 'Level 2',
-            flex:1,
-            editable: false,
-        },
-        {
-            field: 'level3',
-            headerName: 'Level 3',
-            flex:1,
-            editable: false,
-        },
-        {
-            field: 'level4',
-            headerName: 'Level 4',
-            flex:1,
-            editable: false,
-        },
-        {
-            field: 'level5',
-            headerName: 'Level 5',
-            flex:1,
-            editable: false,
-        },
-        {
-            field: 'level6',
-            headerName: 'Level 6',
-            flex:1,
-            editable: false,
-        },
-    ];
-
     const updateMetrics = function () {
         console.log("update metrics")
-        let newMetrics=[]
+        let i = 0;
+        let newItems = {
+            id: i,
+            name: "root",
+            path: "",
+            childs: {}
+        }
         const response = APIServer.getContent('/apiv1/gui/metrics/allMetrics')
         response.then((value) => {
-            value.data.map((metricPath)=>{
-                let newMetric={
-                    path:metricPath.path,
-                    level1:"",
-                    level2:"",
-                    level3:"",
-                    level4:"",
-                    level5:"",
-                    level6:"",
-                }
-                metricPath.path.split(".").map((part,index)=>{
-                    newMetric['level'+(index+1)]=part
+            value.data.map((metricPath) => {
+                let head = newItems
+                metricPath.path.split('.').map((part, index) => {
+                    if (!head.childs.hasOwnProperty(part)) {
+                        head.childs[part] = {
+                            id: ++i,
+                            name: part,
+                            path: metricPath.path,
+                            childs: {}
+                        }
+                    }
+                    head = head.childs[part]
                 })
-                newMetrics.push(newMetric)
             })
-            setMetrics(newMetrics)
+            setTreeItems(newItems)
         }, onError)
     }
 
@@ -98,20 +80,20 @@ function Metrics() {
     )
 
     return (
-        <div style={{ height: 650, width: '100%' }}>
-            <DataGrid
-                sx={{
-                    fontSize:"larger"
-                }}
-                rows={metrics}
-                columns={columns}
-                pageSize={15}
-                rowsPerPageOptions={[15,50,100,200]}
-                rowHeight={35}
-                disableSelectionOnClick={true}
-                getRowId={(row) => row.path}
-            />
-        </div>
+        <TreeView
+            aria-label="file system navigator"
+            defaultExpanded={['0','1']}
+            defaultCollapseIcon={<ExpandMoreIcon/>}
+            defaultExpandIcon={<ChevronRightIcon/>}
+            sx={{
+                //height: 240,
+                flexGrow: 1,
+                width: '70%',
+                overflowY: 'auto',
+            }}
+        >
+            {renderTree(treeItems)}
+        </TreeView>
     );
 }
 

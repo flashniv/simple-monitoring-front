@@ -66,19 +66,19 @@ function DashboardAlertPanel() {
         {
             field: 'startDate',
             headerName: 'Start date',
-            width: 150,
+            flex:0.5,
             editable: false,
         },
         {
             field: 'host',
             headerName: 'Host',
-            width: 600,
+            flex:1.7,
             editable: false,
         },
         {
             field: 'triggerName',
             headerName: 'Trigger name',
-            width: 200,
+            flex:0.5,
             editable: false,
         },
     ];

@@ -76,25 +76,25 @@ export default function History() {
         {
             field: 'timeAgo',
             headerName: 'Time ago',
-            width: 180,
+            flex:0.4,
             editable: false,
         },
         {
             field: 'duration',
             headerName: 'Duration',
-            width: 100,
+            flex:0.2,
             editable: false,
         },
         {
             field: 'host',
             headerName: 'Host',
-            width: 700,
+            flex:1.7,
             editable: false,
         },
         {
             field: 'triggerName',
             headerName: 'Trigger name',
-            width: 200,
+            flex:0.5,
             editable: false,
         },
     ];

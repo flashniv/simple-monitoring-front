@@ -1,13 +1,17 @@
-import classes from "./Dashboard.module.css";
 import DashboardAlertPanel from "../../components/DashboardAlertPanel/DashboardAlertPanel";
 import DashboardStatusPanel from "../../components/DashboardStatusPanel/DashboardStatusPanel";
+import {Box} from "@mui/material";
 
 function Dashboard() {
     return (
-        <div className={classes.Dashboard}>
+        <Box
+            sx={{
+                display:"flex"
+            }}
+        >
             <DashboardAlertPanel/>
             <DashboardStatusPanel/>
-        </div>
+        </Box>
     );
 }
 

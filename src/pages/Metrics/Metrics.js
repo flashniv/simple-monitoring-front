@@ -7,15 +7,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import {makeStyles} from "@mui/styles";
+import {Box} from "@mui/material";
 
 const onError = function (reason) {
     console.error(reason)
 }
 const useStyles = makeStyles({
     label: {
-        display:"flex",
-        height:35,
-        alignItems:"center"
+        display: "flex",
+        height: 35,
+        alignItems: "center"
     }
 });
 
@@ -31,7 +32,7 @@ function Metrics() {
             nodeId={'' + nodes.id}
             label={nodes.name}
             onClick={() => openDetails(nodes)}
-            classes={{ label: classes.label }}
+            classes={{label: classes.label}}
         >
             {Object.keys(nodes.childs).length !== 0
                 ? Object.keys(nodes.childs).map((node) => renderTree(nodes.childs[node]))
@@ -80,20 +81,28 @@ function Metrics() {
     )
 
     return (
-        <TreeView
-            aria-label="file system navigator"
-            defaultExpanded={['0','1']}
-            defaultCollapseIcon={<ExpandMoreIcon/>}
-            defaultExpandIcon={<ChevronRightIcon/>}
+        <Box
             sx={{
-                //height: 240,
-                flexGrow: 1,
-                width: '70%',
-                overflowY: 'auto',
+                backgroundColor:"white",
+                minHeight:900,
+                p:2
             }}
         >
-            {renderTree(treeItems)}
-        </TreeView>
+            <TreeView
+                aria-label="file system navigator"
+                defaultExpanded={['0', '1']}
+                defaultCollapseIcon={<ExpandMoreIcon/>}
+                defaultExpandIcon={<ChevronRightIcon/>}
+                sx={{
+                    //height: 240,
+                    flexGrow: 1,
+                    width: '70%',
+                    overflowY: 'auto',
+                }}
+            >
+                {renderTree(treeItems)}
+            </TreeView>
+        </Box>
     );
 }
 

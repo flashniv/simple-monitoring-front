@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import APIServer from "../../API/APIServer";
-import classes from "./History.module.css";
 import {DataGrid} from "@mui/x-data-grid";
-import {Box} from "@mui/material";
+import {Box, Button, Checkbox, FormControlLabel, FormGroup, TextField, Typography} from "@mui/material";
 
 function getTimeAgo(inputDate) {
     const startDate = new Date(inputDate)
@@ -76,25 +75,25 @@ export default function History() {
         {
             field: 'timeAgo',
             headerName: 'Time ago',
-            flex:0.4,
+            flex: 0.4,
             editable: false,
         },
         {
             field: 'duration',
             headerName: 'Duration',
-            flex:0.2,
+            flex: 0.2,
             editable: false,
         },
         {
             field: 'host',
             headerName: 'Host',
-            flex:1.7,
+            flex: 1.7,
             editable: false,
         },
         {
             field: 'triggerName',
             headerName: 'Trigger name',
-            flex:0.5,
+            flex: 0.5,
             editable: false,
         },
     ];
@@ -126,7 +125,7 @@ export default function History() {
         filtered.map((value => {
             value.timeAgo = getTimeAgo(value.startDate)
             value.duration = getDuration(value.startDate, value.stopDate)
-            value.status=value.stopDate===undefined;
+            value.status = value.stopDate === undefined;
             res.push(value)
         }))
         console.log(res)
@@ -153,31 +152,45 @@ export default function History() {
 
     return (
         <>
-            <div className={classes.HistoryFilter}>
-                <div className={classes.FilterDiv}>
-                    <input id="onlyFiltered" className={classes.HistoryFilterInputCheck}
-                           checked={onlyFiltered} type="checkbox" onChange={() => setOnlyFiltered(!onlyFiltered)}/>
-                    <label htmlFor="onlyFiltered">Filter</label>
-                    <input id="onlyAlerted" className={classes.HistoryFilterInputCheck}
-                           checked={onlyAlerted} type="checkbox" onChange={() => setOnlyAlerted(!onlyAlerted)}/>
-                    <label htmlFor="onlyAlerted">Only alerted</label>
-                </div>
-                <div className={classes.FilterDiv}>
-                    <input className={classes.HistoryFilterInputText} value={filter} placeholder="Search..."
-                           type="text" onChange={(e) => {
-                        setFilter(e.target.value)
-                    }}/>
-                    <button className={classes.HistoryFilterButton} onClick={clearFilter}>Clear</button>
-                </div>
-            </div>
+            <Box
+                sx={{
+                    display: "flex",
+                    backgroundColor: "white",
+                    alignItems:"center",
+                    mb: 1,
+                    p: 1,
+                    pl: 2
+                }}
+            >
+                <FormControlLabel control={<Checkbox checked={onlyFiltered} onChange={() => setOnlyFiltered(!onlyFiltered)}/>} label="Filter"/>
+                <FormControlLabel control={<Checkbox checked={onlyAlerted} onChange={() => setOnlyAlerted(!onlyAlerted)}/>} label="Only alerted"/>
+                <TextField
+                    id="outlined-required"
+                    label="Search"
+                    defaultValue=""
+                    sx={{
+                        width:300,
+                        mr:2
+                    }}
+                    value={filter}
+                    onChange={(e) => {setFilter(e.target.value)}}
+                />
+                <Button variant="contained" onClick={clearFilter} sx={{height:35}}>Clear</Button>
+            </Box>
             <Box
                 sx={{
                     height: 570,
-                    backgroundColor: "background.paper"
+                    backgroundColor: "background.paper",
+                    p: 1
                 }}
             >
                 {!alerts.length
-                    ? <div>Loading...</div>
+                    ? <Typography
+                        variant='h5'
+                        align="center"
+                    >
+                        Loading...
+                    </Typography>
                     : <DataGrid
                         sx={{
                             fontSize: "larger",

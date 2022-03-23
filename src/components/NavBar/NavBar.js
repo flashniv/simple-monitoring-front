@@ -10,7 +10,12 @@ function NavBar({loggedIn}) {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar
+            position="static"
+            sx={{
+                mb:1
+            }}
+        >
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{mr: 2}}>
                     SimpleMonitoring

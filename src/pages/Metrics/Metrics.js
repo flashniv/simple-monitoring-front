@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 function Metrics() {
     const [filter, setFilter] = useState("")
     const [treeItems, setTreeItems] = useState([])
+    const [expand,setExpand]=useState(['0'])
     const navigate = useNavigate()
     const classes = useStyles();
 
@@ -31,6 +32,16 @@ function Metrics() {
         setFilter("")
     };
 
+    const handleToggle = (event, nodeIds) => {
+        setExpand(nodeIds);
+    };
+    const expandAll = function () {
+        if(expand.length<=1) {
+            setExpand(Array(treeItems.length).fill().map((element, index) => '' + index))
+        }else{
+            setExpand(['0'])
+        }
+    }
     const getFiltered = function (inputItems) {
         let items
         let i = 0;
@@ -124,7 +135,8 @@ function Metrics() {
                         setFilter(e.target.value)
                     }}
                 />
-                <Button variant="contained" onClick={clearFilter} sx={{height: 35}}>Clear</Button>
+                <Button variant="contained" onClick={clearFilter} sx={{height: 35, mr:2}}>Clear</Button>
+                <Button variant="contained" onClick={expandAll} sx={{height: 35}}>{expand.length<=1?"Expand all":"Collapse all"}</Button>
             </Box>
             <Box
                 sx={{
@@ -135,9 +147,10 @@ function Metrics() {
             >
                 <TreeView
                     aria-label="file system navigator"
-                    defaultExpanded={['0','1']}
+                    expanded={expand}
                     defaultCollapseIcon={<ExpandMoreIcon/>}
                     defaultExpandIcon={<ChevronRightIcon/>}
+                    onNodeToggle={handleToggle}
                     sx={{
                         //height: 240,
                         flexGrow: 1,

@@ -2,8 +2,8 @@ import React, {useEffect, useRef, useState} from "react";
 import {useParams} from 'react-router-dom';
 import APIServer from "../../API/APIServer";
 import Graphic from "../../components/Graphic/Graphic";
-import Table from "../../components/Table/Table";
 import {Box, Button, Typography} from "@mui/material";
+import Limits from "../../components/Limits/Limits";
 
 function getPrecision(n) {
     for (var i = 0; n > 9000; i++) {
@@ -40,14 +40,6 @@ function MetricDetail() {
     const [limits, setLimits] = useState()
     const [events, setEvents] = useState()
     const [end, setEnd] = useState(0)
-
-    const columns = [
-        {colTitle: "Name", colName: "name"},
-        {colTitle: "Last", colName: "last"},
-        {colTitle: "Min", colName: "min"},
-        {colTitle: "Avg", colName: "avg"},
-        {colTitle: "Max", colName: "max"},
-    ]
 
     function setPeriod(beg, en) {
         setLimits(undefined)
@@ -112,7 +104,13 @@ function MetricDetail() {
     }, [end, begin])
 
     return (
-        <Box ref={div}>
+        <Box
+            sx={{
+                backgroundColor:"white",
+                p:2
+            }}
+            ref={div}
+        >
             <Typography variant="h4" textAlign="center" sx={{mb: 1}}>
                 {path}
             </Typography>
@@ -158,7 +156,7 @@ function MetricDetail() {
                 >
                     Loading...
                 </Typography>
-                : <Table rows={limits} columns={columns}/>
+                : <Limits rows={limits} />
             }
         </Box>
     );

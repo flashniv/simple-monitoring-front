@@ -3,7 +3,6 @@ import axios from "axios";
 export default class APIServer {
     static URL=process.env.REACT_APP_API_URL
     //static URL='http://localhost:8080'
-    static URL='https://simple.flash.biz.ua'
 
     static getUser(){
         return localStorage.getItem('userLogin')

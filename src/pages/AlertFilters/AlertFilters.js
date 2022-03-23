@@ -1,9 +1,8 @@
 import {useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
-import {Navigate} from "react-router";
 import APIServer from "../../API/APIServer";
-import Table from "../../components/Table/Table";
-import classes from "./AlertFilters.module.css";
+import {Box, Button, TextField} from "@mui/material";
+import AlertFiltersTable from "../../components/AlertFiltersTable/AlertFiltersTable";
+import * as React from "react";
 
 function onError(reason) {
     console.error(reason)
@@ -11,47 +10,28 @@ function onError(reason) {
 
 function AlertFilters() {
     const [alertFilters, setAlertFilters] = useState([])
-    // eslint-disable-next-line no-unused-vars
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const [name,setName]=useState("")
+    const [expr,setExpr]=useState("")
 
-    if (Object.keys(errors).length !== 0) {
-        console.error(errors)
-    }
-
-    const columns = [
-        { colTitle: "Name", colName: "name" },
-        { colTitle: "Expression", colName: "expression" },
-        { colTitle: "", colName: "buttons" }
-    ]
-
-    const onAdd = function (data){
-        const response=APIServer.postContent('/apiv1/gui/configuration/alertFilters/addAlertFilter',data)
-        response.then(()=>{
-            updateAlertFilters()
-            console.log("Add success")
-        },onError)
-}
-
-    const onDelete = function (data) {
-        if(window.confirm("Delete it?")){
-            const response=APIServer.postContent('/apiv1/gui/configuration/alertFilters/deleteAlertFilter',{id:data})
-            response.then(()=>{
-                updateAlertFilters()
-                console.log("Delete success")
-            },onError)
+    const onAdd = function () {
+        const data={
+            name: name,
+            expression: expr
         }
+        const response = APIServer.postContent('/apiv1/gui/configuration/alertFilters/addAlertFilter', data)
+        response.then(() => {
+            updateAlertFilters()
+            setExpr("")
+            setName("")
+            console.log("Add success")
+        }, onError)
     }
 
     const updateAlertFilters = function () {
         console.log("update AlertFilters")
         const response = APIServer.getContent('/apiv1/gui/configuration/alertFilters/allAlertFilters')
         response.then((value) => {
-            let filters = []
-            value.data.forEach(alertFilter => {
-                alertFilter.buttons=<button className={classes.AlertFiltersButton} onClick={()=>{onDelete(alertFilter.id)}}>X</button>
-                filters.push(alertFilter)
-            })
-            setAlertFilters(filters)
+            setAlertFilters(value.data)
         }, onError)
     }
 
@@ -63,21 +43,50 @@ function AlertFilters() {
 
     return (
         <>
-            {APIServer.isLoggedIn()
-                ? <>
-                    <div className={classes.AlertFiltersDiv}>
-                        <form onSubmit={handleSubmit(onAdd)}>
-                            <input type="text" className={classes.AlertFiltersInput} placeholder="Name..." {...register("name", {})} />
-                            <input type="text" className={classes.AlertFiltersInput} placeholder="Expression..." {...register("expression", {})} />
-                            <input type="submit" value="+" className={classes.AlertFiltersButton} />
-                        </form>
-                    </div>
-                    <div className={classes.AlertFilters}>
-                        <Table rows={alertFilters} columns={columns} />
-                    </div>
-                </>
-                : <Navigate to="/login" />
-            }
+            <Box
+                sx={{
+                    display:"flex",
+                    alignItems:"center",
+                    backgroundColor:"white",
+                    p:1,
+                    mb:1
+                }}
+            >
+                <TextField
+                    id="outlined-required"
+                    label="Name"
+                    sx={{
+                        width: 300,
+                        mr: 2
+                    }}
+                    value={name}
+                    onChange={(e) => {
+                        setName(e.target.value)
+                    }}
+                />
+                <TextField
+                    id="outlined-required"
+                    label="Expression"
+                    sx={{
+                        width: 300,
+                        mr: 2
+                    }}
+                    value={expr}
+                    onChange={(e) => {
+                        setExpr(e.target.value)
+                    }}
+                />
+                <Button variant="contained" onClick={onAdd} sx={{height: 35, mr:2}}>Add</Button>
+            </Box>
+            <Box
+                sx={{
+                    backgroundColor:"white",
+                    minHeight:900,
+                    p:2
+                }}
+            >
+                <AlertFiltersTable rows={alertFilters} updateAlertFilters={updateAlertFilters} />
+            </Box>
         </>
     );
 }

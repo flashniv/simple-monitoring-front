@@ -128,7 +128,6 @@ export default function History() {
             value.status = value.stopDate === undefined;
             res.push(value)
         }))
-        console.log(res)
         return res
     };
 

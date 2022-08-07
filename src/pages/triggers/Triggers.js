@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import API from "../../API/API";
-import {Alert, Box} from "@mui/material";
+import {Alert, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import TriggerDetail from "./TriggerDetail";
 
 /*{"id":"731efbe48892c8eb486bccb36b9a8b66",
 "triggerId":"db.myproject.jenkins.certificates.vovaNew.new{}.daily",
@@ -13,16 +13,16 @@ import {Alert, Box} from "@mui/material";
 "enabled":true,
 "conf":""}
 */
-function row(param) {
+function statusCell(param) {
     console.log(param)
-    return(
+    return (
         <Box
             sx={{
-                width:"100%",
-                height:"100%",
-                textAlign:"center",
-                pt:2,
-                backgroundColor:param.value.localeCompare("OK")===0?"#ccffda":"#ffd3cc"
+                width: "100%",
+                height: "100%",
+                textAlign: "center",
+                pt: 2,
+                backgroundColor: param.value.localeCompare("OK") === 0 ? "#ccffda" : "#ffd3cc"
             }}
         >
             {param.value}
@@ -30,49 +30,64 @@ function row(param) {
     )
 }
 
-const columns = [
-    {field: 'lastStatus', headerName: 'Status', flex: 0.4,
-        renderCell:row
-    },
-    {field: 'lastStatusUpdate', headerName: 'Upd time', flex: 1},
-    {field: 'name', headerName: 'Name',flex: 4},
-];
-
-export default function Triggers({setAlert,setTitle}) {
-    const [triggers,setTriggers] = useState(undefined);
+export default function Triggers({setAlert, setTitle}) {
+    const [triggers, setTriggers] = useState(undefined);
+    const [showDetails,setShowDetails] = useState(false)
+    const [selectedTrigger,setSelectedTrigger]= useState(undefined)
 
     function updTriggers() {
-        API.getTriggers((newTriggers)=>{
+        API.getTriggers((newTriggers) => {
             setTriggers(newTriggers)
-        },(reason)=>{
+        }, (reason) => {
             setAlert(<Alert severity={"error"}>Server error!</Alert>)
         })
     }
 
-    useEffect(()=>{
+    function rowClick(trigger) {
+        setSelectedTrigger(trigger)
+        setShowDetails(true)
+    }
+
+    useEffect(() => {
         setTitle("Triggers")
         updTriggers()
-    },[])
+    }, [])
 
-    return(
+    return (
         <>
             {triggers !== undefined
-                ? <DataGrid
-                    sx={{
-                        height: "91vh"
-                    }}
-                    rows={triggers.map((value)=>{
-                        value.lastStatusUpdate=new Date(value.lastStatusUpdate).toLocaleString()
-                        return value
-                    })}
-                    columns={columns}
-                    components={{
-                        Toolbar: GridToolbar
-                    }}
-                />
+                ? <TableContainer>
+                    <Table sx={{minWidth: 650}} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Status</TableCell>
+                                <TableCell align="right">Timestamp</TableCell>
+                                <TableCell align="right">Name</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {triggers.map((value) => {
+                                value.lastStatusUpdate = new Date(value.lastStatusUpdate).toLocaleString()
+                                return value
+                            }).map((value)=><TableRow
+                                key={value.id}
+                                sx={{backgroundColor:value.lastStatus.localeCompare("OK")===0?"#ccffda":"#ffd3cc",borderBottom:"2px solid darkgrey"}}
+                                onClick={()=>rowClick(value)}
+                            >
+                                <TableCell align={"center"}>{value.lastStatus}</TableCell>
+                                <TableCell align={"right"} width={170}>{value.lastStatusUpdate}</TableCell>
+                                <TableCell>{value.name}</TableCell>
+                            </TableRow>)
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
                 : <></>
             }
-
+            {selectedTrigger!==undefined
+                ?<TriggerDetail trigger={selectedTrigger} showDetail={showDetails} setShowDetail={setShowDetails} />
+                :<></>
+            }
         </>
     )
 }

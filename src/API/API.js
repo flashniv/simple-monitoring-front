@@ -79,4 +79,12 @@ export default class API {
         })
     }
 
+    static getTriggers(onSuccess, onFailure) {
+        const response = API.getContent("/api/v1/trigger/");
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
 }

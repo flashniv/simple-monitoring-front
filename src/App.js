@@ -5,6 +5,7 @@ import {useState} from "react";
 import NavBar from "./components/NavBar/NavBar";
 import Login from "./pages/login/Login";
 import API from "./API/API";
+import Triggers from "./pages/triggers/Triggers";
 
 let theme = createTheme({
     palette: {
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/" element={<IndexPage setTitle={setTitle}/>}/>
                     <Route path="/login"
                            element={<Login setTitle={setTitle} setLoggedIn={setLoggedIn}/>}/>
+                    <Route path="/triggers" element={<Triggers setAlert={setAlert} setTitle={setTitle}/>}/>
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

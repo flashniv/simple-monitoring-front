@@ -118,11 +118,11 @@ export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) 
                     {loggedIn
                         ? <>
                             <ListItemButton onClick={() => {
-                                navigate("/send-email", {replace: false});
+                                navigate("/triggers", {replace: false});
                                 setShowSidebar(false);
                             }}>
                                 <AlternateEmailIcon/>
-                                <ListItemText sx={{ml: 2}} primary="Email sender"/>
+                                <ListItemText sx={{ml: 2}} primary="Triggers"/>
                             </ListItemButton>
                         </>
                         : <></>

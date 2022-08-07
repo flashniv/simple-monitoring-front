@@ -15,7 +15,7 @@ export default function IndexPage({setTitle}) {
                 display: "flex",
                 justifyContent: "center",
                 pt: 7,
-                pb: 9
+                pb: 7
             }}
         >
             <Container

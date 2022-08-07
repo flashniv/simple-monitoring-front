@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default class API {
-    static URL = 'https://simple-monitoring.flash.biz.ua'
+    static URL = 'https://simple.flash.biz.ua'
     //static URL = 'http://localhost:8080'
 
     static getUser() {

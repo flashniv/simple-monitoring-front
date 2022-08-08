@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar/NavBar";
 import Login from "./pages/login/Login";
 import API from "./API/API";
 import Triggers from "./pages/triggers/Triggers";
+import TriggerDetail from "./pages/triggers/TriggerDetail";
 
 let theme = createTheme({
     palette: {
@@ -39,7 +40,10 @@ function App() {
                     <Route path="/" element={<IndexPage setTitle={setTitle}/>}/>
                     <Route path="/login"
                            element={<Login setTitle={setTitle} setLoggedIn={setLoggedIn}/>}/>
-                    <Route path="/triggers" element={<Triggers setAlert={setAlert} setTitle={setTitle}/>}/>
+                    <Route path="/triggers" element={<Triggers setAlert={setAlertWithTimer} setTitle={setTitle}/>}/>
+                    <Route path="/trigger">
+                        <Route path=":triggerId" element={<TriggerDetail setTitle={setTitle} setAlert={setAlertWithTimer}/>}/>
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import API from "../../API/API";
-import {Alert, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import TriggerDetail from "./TriggerDetail";
+import {Alert, Grid, TableCell, TableRow} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 /*{"id":"731efbe48892c8eb486bccb36b9a8b66",
 "triggerId":"db.myproject.jenkins.certificates.vovaNew.new{}.daily",
@@ -13,27 +13,71 @@ import TriggerDetail from "./TriggerDetail";
 "enabled":true,
 "conf":""}
 */
-function statusCell(param) {
-    console.log(param)
-    return (
-        <Box
-            sx={{
-                width: "100%",
-                height: "100%",
-                textAlign: "center",
-                pt: 2,
-                backgroundColor: param.value.localeCompare("OK") === 0 ? "#ccffda" : "#ffd3cc"
-            }}
-        >
-            {param.value}
-        </Box>
-    )
+
+const cellStyleHead={
+    borderBottom: "1px solid darkgrey",
+    cursor:"pointer",
+    p: 2,
+}
+const cellStyleOK={
+    backgroundColor: "#ccffda",
+    borderBottom: "1px solid darkgrey",
+    cursor:"pointer",
+    p: 1,
+}
+const cellStyleERR={
+    backgroundColor: "#ffd3cc",
+    borderBottom: "1px solid darkgrey",
+    cursor:"pointer",
+    p: 1,
+}
+
+function getTimeAgo(inputDate) {
+    const startDate = new Date(inputDate)
+    const minutesAgo = (Date.now() - startDate) / 60000
+    if (minutesAgo < 3) {
+        return "just now"
+    } else if (minutesAgo < 7) {
+        return "a few minutes"
+    } else if (minutesAgo < 10) {
+        return "less 10 minutes"
+    } else if (minutesAgo < 30) {
+        return "less 30 minutes"
+    } else if (minutesAgo < 60) {
+        return "less an hour"
+    } else if (minutesAgo < 120) {
+        return "less an 2 hours"
+    } else if (minutesAgo < 360) {
+        return "less an 6 hours"
+    } else if (minutesAgo < 720) {
+        return "less an 12 hours"
+    } else if (minutesAgo < 1440) {
+        return "today"
+    } else if (minutesAgo < 2880) {
+        return "yesterday"
+    } else if (minutesAgo < 10080) {
+        return "current week"
+    } else if (minutesAgo < 43200) {
+        return "current mounth"
+    }
+    return "too old"
+}
+
+function compareDate(a, b) {
+    let aDate = new Date(a.lastStatusUpdate).getTime()
+    let bDate = new Date(b.lastStatusUpdate).getTime()
+    if (aDate < bDate) {
+        return 1;
+    }
+    if (aDate > bDate) {
+        return -1;
+    }
+    return 0;
 }
 
 export default function Triggers({setAlert, setTitle}) {
     const [triggers, setTriggers] = useState(undefined);
-    const [showDetails,setShowDetails] = useState(false)
-    const [selectedTrigger,setSelectedTrigger]= useState(undefined)
+    const navigate = useNavigate()
 
     function updTriggers() {
         API.getTriggers((newTriggers) => {
@@ -44,8 +88,7 @@ export default function Triggers({setAlert, setTitle}) {
     }
 
     function rowClick(trigger) {
-        setSelectedTrigger(trigger)
-        setShowDetails(true)
+        navigate("/trigger/" + trigger.id)
     }
 
     useEffect(() => {
@@ -56,37 +99,19 @@ export default function Triggers({setAlert, setTitle}) {
     return (
         <>
             {triggers !== undefined
-                ? <TableContainer>
-                    <Table sx={{minWidth: 650}} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Status</TableCell>
-                                <TableCell align="right">Timestamp</TableCell>
-                                <TableCell align="right">Name</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {triggers.map((value) => {
-                                value.lastStatusUpdate = new Date(value.lastStatusUpdate).toLocaleString()
-                                return value
-                            }).map((value)=><TableRow
-                                key={value.id}
-                                sx={{backgroundColor:value.lastStatus.localeCompare("OK")===0?"#ccffda":"#ffd3cc",borderBottom:"2px solid darkgrey"}}
-                                onClick={()=>rowClick(value)}
-                            >
-                                <TableCell align={"center"}>{value.lastStatus}</TableCell>
-                                <TableCell align={"right"} width={170}>{value.lastStatusUpdate}</TableCell>
-                                <TableCell>{value.name}</TableCell>
-                            </TableRow>)
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                ? <Grid container>
+                    <Grid item md={1} display={{xs:"none", md:"block"}} xs={false} sx={cellStyleHead} fontWeight={"bold"}>Status</Grid>
+                    <Grid item md={2} display={{xs:"none", md:"block"}} xs={false} sx={cellStyleHead} fontWeight={"bold"}>Timestamp</Grid>
+                    <Grid item md={9} display={{xs:"none", md:"block"}} xs={false} sx={cellStyleHead} fontWeight={"bold"}>Name</Grid>
+                    {triggers.sort(compareDate).map((value) => <React.Fragment key={value.id}>
+                        <Grid item md={1} xs={12} fontSize={{xs:"small", md:"large"}} sx={value.lastStatus.localeCompare("OK")===0?cellStyleOK:cellStyleERR} onClick={()=>rowClick(value)}>{value.lastStatus}</Grid>
+                        <Grid item md={2} xs={12} fontSize={{xs:"small", md:"large"}} sx={value.lastStatus.localeCompare("OK")===0?cellStyleOK:cellStyleERR} onClick={()=>rowClick(value)}>{getTimeAgo(value.lastStatusUpdate)}</Grid>
+                        <Grid item md={9} xs={12} fontSize={{xs:"small", md:"large"}} sx={value.lastStatus.localeCompare("OK")===0?cellStyleOK:cellStyleERR} onClick={()=>rowClick(value)}>{value.name}</Grid>
+                        <Grid item md={false} xs={12} display={{xs: "block", md: "none"}} sx={{p: 1}}/>
+                    </React.Fragment>)
+                    }
+                </Grid>
                 : <></>
-            }
-            {selectedTrigger!==undefined
-                ?<TriggerDetail trigger={selectedTrigger} showDetail={showDetails} setShowDetail={setShowDetails} />
-                :<></>
             }
         </>
     )

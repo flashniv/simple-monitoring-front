@@ -87,4 +87,13 @@ export default class API {
             onFailure(reason)
         })
     }
+
+    static getTriggerDetail(triggerId, onSuccess, onFailure) {
+        const response = API.getContent("/api/v1/trigger/"+triggerId);
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
 }

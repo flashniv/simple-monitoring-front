@@ -24,6 +24,8 @@ import {useNavigate} from "react-router-dom";
 */
 
 const cellStyle = {
+    display:"flex",
+    alignItems:"flex-end",
     pl: 2,
     pr: 2,
     pt: 1,

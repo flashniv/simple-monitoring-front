@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Box, Grid, Tooltip, Typography} from "@mui/material";
+import {Alert, Backdrop, Box, CircularProgress, Grid, Tooltip, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
 import API from "../../API/API";
 
@@ -137,7 +137,9 @@ export default function TriggerDetail({setAlert, setTitle}) {
                         )}
                     </Grid>
                 </>
-                : <></>
+                :  <Backdrop open={true} sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}>
+                    <CircularProgress color="inherit"/>
+                </Backdrop>
             }
         </>
     )

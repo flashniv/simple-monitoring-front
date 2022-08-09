@@ -11,7 +11,7 @@ export default function IndexPage({setTitle}) {
             sx={{
                 backgroundImage: "url(\"/background.jpg\")",
                 backgroundSize: "100%",
-                minHeight: "92vh",
+                minHeight: "100vh",
                 display: "flex",
                 justifyContent: "center",
                 pt: 7,
@@ -21,6 +21,7 @@ export default function IndexPage({setTitle}) {
             <Container
                 sx={{
                     backgroundColor: "rgba(255,255,255,0.9)",
+                    height: "510px",
                     p: 3
                 }}
 

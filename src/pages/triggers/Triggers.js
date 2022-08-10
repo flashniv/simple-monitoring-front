@@ -100,6 +100,7 @@ export default function Triggers({setAlert, setTitle}) {
     const [filter,setFilter] = useState("")
 
     function triggersFilter(trigger) {
+        if(trigger.suppressed) return false
         if(onlyAlerted){
             if(trigger.lastStatus.localeCompare("OK")===0){
                 return false

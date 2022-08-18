@@ -43,6 +43,12 @@ const cellStyleOK = {
     cursor: "pointer",
     p: 1,
 }
+const cellStyleSuppressed = {
+    backgroundColor: "#929292",
+    borderBottom: "1px solid darkgrey",
+    cursor: "pointer",
+    p: 1,
+}
 const cellStyleERR = {
     backgroundColor: "#ffd3cc",
     borderBottom: "1px solid darkgrey",
@@ -97,10 +103,11 @@ export default function Triggers({setAlert, setTitle}) {
     const [triggers, setTriggers] = useState(undefined);
     const navigate = useNavigate()
     const [onlyAlerted,setOnlyAlerted] = useState(true)
+    const [showSuppressed,setShowSuppressed] = useState(false)
     const [filter,setFilter] = useState("")
 
     function triggersFilter(trigger) {
-        if(trigger.suppressed) return false
+        if(trigger.suppressed && !showSuppressed) return false
         if(onlyAlerted){
             if(trigger.lastStatus.localeCompare("OK")===0){
                 return false
@@ -132,9 +139,14 @@ export default function Triggers({setAlert, setTitle}) {
     return (
         <>
             <Grid container>
-                <Grid item sx={cellStyle} md={2} xs={12}>
+                <Grid item sx={cellStyle} md={2} xs={6}>
                     <FormGroup>
                         <FormControlLabel control={<Checkbox checked={onlyAlerted} onChange={(e)=>setOnlyAlerted(e.target.checked)}/>} label="Only alerted" />
+                    </FormGroup>
+                </Grid>
+                <Grid item sx={cellStyle} md={2} xs={6}>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox checked={showSuppressed} onChange={(e)=>setShowSuppressed(e.target.checked)}/>} label="Show suppressed" />
                     </FormGroup>
                 </Grid>
                 <Grid item sx={cellStyle} md={2} xs={12}>
@@ -151,13 +163,13 @@ export default function Triggers({setAlert, setTitle}) {
                           fontWeight={"bold"}>Name</Grid>
                     {triggers.filter(triggersFilter).sort(compareDate).map((value) => <React.Fragment key={value.id}>
                         <Grid item md={1} xs={12}
-                              sx={value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
+                              sx={value.suppressed?cellStyleSuppressed:value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
                               onClick={() => rowClick(value)}>{value.lastStatus}</Grid>
                         <Grid item md={2} xs={12}
-                              sx={value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
+                              sx={value.suppressed?cellStyleSuppressed:value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
                               onClick={() => rowClick(value)}>{getTimeAgo(value.lastStatusUpdate)}</Grid>
                         <Grid item md={9} xs={12}
-                              sx={value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
+                              sx={value.suppressed?cellStyleSuppressed:value.lastStatus.localeCompare("OK") === 0 ? cellStyleOK : cellStyleERR}
                               onClick={() => rowClick(value)}>{value.name}</Grid>
                         <Grid item md={false} xs={12} display={{xs: "block", md: "none"}} sx={{p: 1}}/>
                     </React.Fragment>)

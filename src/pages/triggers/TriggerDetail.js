@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Backdrop, Box, CircularProgress, Grid, Tooltip, Typography} from "@mui/material";
+import {
+    Alert,
+    Backdrop,
+    Box, Button,
+    Checkbox,
+    CircularProgress,
+    FormControl,
+    Grid, InputLabel, MenuItem, Select,
+    TextField,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import {useParams} from "react-router-dom";
 import API from "../../API/API";
 
-/*{"alerts":
-[{"alertTimestamp":"2022-08-08T07:46:05.461760Z","id":1,"trigger":{"triggerId":"db.test.trigger","name":"Test trigger","description":"","lastStatusUpdate":"2022-08-08T07:46:05.445203Z","conf":"","id":"de884fcf16b2f1f9b233307a7f6678f1","priority":"AVERAGE","lastStatus":"OK","enabled":true}}],
-"triggerId":"db.test.trigger",
-"name":"Test trigger",
-"description":"",
-"lastStatusUpdate":"2022-08-08T07:46:05.445203Z",
-"conf":"",
-"id":"de884fcf16b2f1f9b233307a7f6678f1",
-"priority":"AVERAGE",
-"lastStatus":"OK",
-"enabled":true}*/
 function getTimeAgo(inputDate) {
     const startDate = new Date(inputDate)
     const minutesAgo = (Date.now() - startDate) / 60000
@@ -77,9 +77,27 @@ const cellStyleAlertERR = {
     borderBottom: "1px solid darkgrey",
     p: 1
 }
+/*{"alerts":
+[{"alertTimestamp":"2022-08-08T07:46:05.461760Z","id":1,"trigger":{"triggerId":"db.test.trigger","name":"Test trigger","description":"","lastStatusUpdate":"2022-08-08T07:46:05.445203Z","conf":"","id":"de884fcf16b2f1f9b233307a7f6678f1","priority":"AVERAGE","lastStatus":"OK","enabled":true}}],
+"triggerId":"db.test.trigger",
+"name":"Test trigger",
+"description":"",
+"lastStatusUpdate":"2022-08-08T07:46:05.445203Z",
+"conf":"",
+"id":"de884fcf16b2f1f9b233307a7f6678f1",
+"priority":"AVERAGE",
+"lastStatus":"OK",
+"enabled":true}*/
 
 export default function TriggerDetail({setAlert, setTitle}) {
     const [trigger, setTrigger] = useState(undefined)
+    const [changed, setChanged] = useState(false)
+    const [triggerName, setTriggerName] = useState(undefined)
+    const [triggerDesc, setTriggerDesc] = useState(undefined)
+    const [triggerConf, setTriggerConf] = useState(undefined)
+    const [triggerPrio, setTriggerPrio] = useState(undefined)
+    const [triggerEnabled, setTriggerEnabled] = useState(undefined)
+    const [triggerSuppressed, setTriggerSuppressed] = useState(undefined)
     const {triggerId} = useParams();
 
     let cellStatusStyle = Object.assign({}, cellStyleRight);
@@ -89,10 +107,40 @@ export default function TriggerDetail({setAlert, setTitle}) {
         setTitle('Trigger detail')
         API.getTriggerDetail(triggerId, (newTrigger) => {
             setTrigger(newTrigger)
+            setTriggerName(newTrigger.name)
+            setTriggerDesc(newTrigger.description)
+            setTriggerConf(newTrigger.conf)
+            setTriggerPrio(newTrigger.priority)
+            setTriggerSuppressed(newTrigger.suppressed)
+            setTriggerEnabled(newTrigger.enabled)
         }, (reason) => {
             setAlert(<Alert severity={"error"}>Server error!</Alert>)
         })
     }, [])
+
+    function saveTrigger() {
+        if(window.confirm("Are you sure?")) {
+            const newTrigger = {
+                "triggerId": trigger.triggerId,
+                "name": triggerName,
+                "description": triggerDesc,
+                "lastStatusUpdate": trigger.lastStatusUpdate,
+                "conf": triggerConf,
+                "id": trigger.id,
+                "priority": triggerPrio,
+                "lastStatus": trigger.lastStatus,
+                "suppressed": triggerSuppressed,
+                "suppressedUpdate": trigger.suppressedUpdate,
+                "enabled": triggerEnabled
+            }
+            API.updateTrigger(newTrigger,()=>{
+                setChanged(false)
+                setAlert(<Alert severity={"success"}>Trigger saved!</Alert>)
+            },(reason)=>{
+                setAlert(<Alert severity={"error"}>Server error!</Alert>)
+            })
+        }
+    }
 
     return (
         <>
@@ -108,15 +156,107 @@ export default function TriggerDetail({setAlert, setTitle}) {
                         <Grid item md={9} xs={12}
                               sx={cellStyleRight}>{getTimeAgo(trigger.lastStatusUpdate)} ({new Date(trigger.lastStatusUpdate).toLocaleString()})</Grid>
                         <Grid item md={3} xs={12} sx={cellStyleLeft}>Name</Grid>
-                        <Grid item md={9} xs={12} sx={cellStyleRight}>{trigger.name}</Grid>
+                        <Grid item md={9} xs={12} sx={cellStyleRight}>
+                            <TextField
+                                hiddenLabel
+                                fullWidth
+                                id="filled-hidden-label-small"
+                                value={triggerName}
+                                onChange={(event) => {
+                                    setTriggerName(event.target.value);
+                                    setChanged(true);
+                                }}
+                                variant="outlined"
+                                size="small"
+                            />
+                        </Grid>
                         <Grid item md={3} xs={12} sx={cellStyleLeft}>Description</Grid>
-                        <Grid item md={9} xs={12} sx={cellStyleRight}>{trigger.description}</Grid>
+                        <Grid item md={9} xs={12} sx={cellStyleRight}>
+                            <TextField
+                                hiddenLabel
+                                fullWidth
+                                multiline
+                                id="filled-hidden-label-small"
+                                value={triggerDesc}
+                                onChange={(event) => {
+                                    setTriggerDesc(event.target.value);
+                                    setChanged(true);
+                                }}
+                                variant="outlined"
+                                size="small"
+                            />
+                        </Grid>
                         <Grid item md={3} xs={12} sx={cellStyleLeft}>Trigger ID</Grid>
                         <Grid item md={9} xs={12} sx={cellStyleRight}>{trigger.triggerId}</Grid>
+                        <Grid item md={3} xs={12} sx={cellStyleLeft}>Trigger priority</Grid>
+                        <Grid item md={9} xs={12} sx={cellStyleRight}>
+                            <FormControl fullWidth>
+                                <Select
+                                    id="demo-simple-select"
+                                    value={triggerPrio}
+                                    size="small"
+                                    onChange={(event) => {
+                                        setTriggerPrio(event.target.value);
+                                        setChanged(true);
+                                    }}
+                                >
+                                    <MenuItem value={"DEBUG"}>Debug</MenuItem>
+                                    <MenuItem value={"NOT_CLASSIFIED"}>Not classified</MenuItem>
+                                    <MenuItem value={"INFO"}>Info</MenuItem>
+                                    <MenuItem value={"AVERAGE"}>Average</MenuItem>
+                                    <MenuItem value={"WARNING"}>Warning</MenuItem>
+                                    <MenuItem value={"HIGH"}>High</MenuItem>
+                                    <MenuItem value={"DISASTER"}>Disaster</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
                         <Grid item md={3} xs={12} sx={cellStyleLeft}>Conf</Grid>
-                        <Grid item md={9} xs={12} sx={cellStyleRight}>{trigger.conf}</Grid>
-                        <Grid item md={3} xs={12} sx={cellStyleLeft}>Enabled</Grid>
-                        <Grid item md={9} xs={12} sx={cellStyleRight}>{'' + trigger.enabled}</Grid>
+                        <Grid item md={9} xs={12} sx={cellStyleRight}>
+                            <TextField
+                                hiddenLabel
+                                fullWidth
+                                multiline
+                                id="filled-hidden-label-small"
+                                value={triggerConf}
+                                onChange={(event) => {
+                                    setTriggerConf(event.target.value);
+                                    setChanged(true);
+                                }}
+                                variant="outlined"
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item md={3} xs={9} sx={cellStyleLeft}>Suppressed</Grid>
+                        <Grid item md={3} xs={3} sx={cellStyleRight}>
+                            <Checkbox
+                                checked={triggerSuppressed}
+                                onChange={(event, checked) => {
+                                    setTriggerSuppressed(checked);
+                                    setChanged(true);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item md={3} xs={9} sx={cellStyleLeft}>Enabled</Grid>
+                        <Grid item md={3} xs={3} sx={cellStyleRight}>
+                            <Checkbox
+                                checked={triggerEnabled}
+                                onChange={(event, checked) => {
+                                    setTriggerEnabled(checked);
+                                    setChanged(true);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item md={11} xs={12} display={{md:"block", xs:"none"}} sx={cellStyleLeft} />
+                        <Grid item md={1} xs={12} sx={cellStyleRight}>
+                            <Button
+                                fullWidth
+                                disabled={!changed}
+                                variant={"contained"}
+                                onClick={saveTrigger}
+                            >
+                                Save
+                            </Button>
+                        </Grid>
                     </Grid>
                     <Typography variant={"h5"} textAlign={"center"} p={2}>
                         Alerts
@@ -137,7 +277,7 @@ export default function TriggerDetail({setAlert, setTitle}) {
                         )}
                     </Grid>
                 </>
-                :  <Backdrop open={true} sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}>
+                : <Backdrop open={true} sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
             }

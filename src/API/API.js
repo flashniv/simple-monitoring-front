@@ -96,4 +96,13 @@ export default class API {
             onFailure(reason)
         })
     }
+
+    static updateTrigger(newTrigger, onSuccess, onFailure) {
+        const response = API.postContent("/api/v1/trigger/",newTrigger);
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
 }

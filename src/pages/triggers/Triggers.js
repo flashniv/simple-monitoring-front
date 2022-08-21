@@ -41,18 +41,21 @@ const cellStyleOK = {
     backgroundColor: "#ccffda",
     borderBottom: "1px solid darkgrey",
     cursor: "pointer",
+    wordWrap:"break-word",
     p: 1,
 }
 const cellStyleSuppressed = {
     backgroundColor: "#929292",
     borderBottom: "1px solid darkgrey",
     cursor: "pointer",
+    wordWrap:"break-word",
     p: 1,
 }
 const cellStyleERR = {
     backgroundColor: "#ffd3cc",
     borderBottom: "1px solid darkgrey",
     cursor: "pointer",
+    wordWrap:"break-word",
     p: 1,
 }
 

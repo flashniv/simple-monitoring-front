@@ -124,6 +124,13 @@ export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) 
                                 <AlternateEmailIcon/>
                                 <ListItemText sx={{ml: 2}} primary="Triggers"/>
                             </ListItemButton>
+                            <ListItemButton onClick={() => {
+                                navigate("/items", {replace: false});
+                                setShowSidebar(false);
+                            }}>
+                                <AlternateEmailIcon/>
+                                <ListItemText sx={{ml: 2}} primary="Items"/>
+                            </ListItemButton>
                         </>
                         : <></>
                     }

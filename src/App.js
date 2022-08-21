@@ -7,6 +7,8 @@ import Login from "./pages/login/Login";
 import API from "./API/API";
 import Triggers from "./pages/triggers/Triggers";
 import TriggerDetail from "./pages/triggers/TriggerDetail";
+import Item from "./pages/item/Item";
+import Items from "./pages/items/Items";
 
 let theme = createTheme({
     palette: {
@@ -43,6 +45,10 @@ function App() {
                     <Route path="/triggers" element={<Triggers setAlert={setAlertWithTimer} setTitle={setTitle}/>}/>
                     <Route path="/trigger">
                         <Route path=":triggerId" element={<TriggerDetail setTitle={setTitle} setAlert={setAlertWithTimer}/>}/>
+                    </Route>
+                    <Route path="/items" element={<Items setAlert={setAlertWithTimer} setTitle={setTitle}/>}/>
+                    <Route path="/item">
+                        <Route path=":itemId" element={<Item setTitle={setTitle} setAlert={setAlertWithTimer}/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -105,4 +105,13 @@ export default class API {
             onFailure(reason)
         })
     }
+
+    static getItems(onSuccess, onFailure) {
+        const response = API.getContent("/api/v1/metric/");
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
 }

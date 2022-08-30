@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export default class API {
-    static URL=process.env.REACT_APP_API_URL
+    static URL = process.env.REACT_APP_API_URL
+
     //static URL = 'http://localhost:8080'
 
     static getUser() {
@@ -70,6 +71,7 @@ export default class API {
             onFailure(reason)
         })
     }
+
     static getUsers(onSuccess, onFailure) {
         const response = API.getContent("/api/v1/user/");
         response.then((value) => {
@@ -89,7 +91,7 @@ export default class API {
     }
 
     static getTriggerDetail(triggerId, onSuccess, onFailure) {
-        const response = API.getContent("/api/v1/trigger/"+triggerId);
+        const response = API.getContent("/api/v1/trigger/" + triggerId);
         response.then((value) => {
             onSuccess(value.data)
         }, (reason) => {
@@ -98,7 +100,7 @@ export default class API {
     }
 
     static updateTrigger(newTrigger, onSuccess, onFailure) {
-        const response = API.postContent("/api/v1/trigger/",newTrigger);
+        const response = API.postContent("/api/v1/trigger/", newTrigger);
         response.then((value) => {
             onSuccess(value.data)
         }, (reason) => {
@@ -113,5 +115,19 @@ export default class API {
         }, (reason) => {
             onFailure(reason)
         })
+    }
+
+    static getParameterGroups(metricId, onSuccess, onFailure) {
+        const response = API.getContent("/api/v1/metric/" + metricId + "/parameterGroups");
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
+
+    static getEventsByParameterGroupId(parameterGroupId, begin, end) {
+        const response = API.getContent("/api/v1/event/" + parameterGroupId + "?begin=" + begin.toISOString() + "&end=" + end.toISOString());
+        return response
     }
 }

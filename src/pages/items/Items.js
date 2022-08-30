@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 const cellStyle = {
     borderBottom: "1px solid lightgrey",
     wordWrap: "break-word",
+    cursor:"pointer",
     pl: 2,
     pr: 2,
     pt: 1,

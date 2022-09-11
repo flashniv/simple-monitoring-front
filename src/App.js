@@ -9,7 +9,6 @@ import Triggers from "./pages/triggers/Triggers";
 import TriggerDetail from "./pages/triggers/TriggerDetail";
 import Item from "./pages/item/Item";
 import Items from "./pages/items/Items";
-import Item2 from "./pages/item/Item2";
 
 let theme = createTheme({
     palette: {
@@ -51,7 +50,6 @@ function App() {
                     <Route path="/item">
                         <Route path=":itemId" element={<Item setTitle={setTitle} setAlert={setAlertWithTimer}/>}/>
                     </Route>
-                    <Route path="/item2" element={<Item2 />}/>
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

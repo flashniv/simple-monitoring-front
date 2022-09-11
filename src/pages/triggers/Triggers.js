@@ -11,6 +11,10 @@ import {
     Grid, TextField
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setTriggersFilter} from "../../store/triggers/TriggersFilter";
+import {setTriggersOnlyAlerted} from "../../store/triggers/TriggersOnlyAlerted";
+import {setTriggersShowSuppressed} from "../../store/triggers/TriggersShowSuppressed";
 
 /*{"id":"731efbe48892c8eb486bccb36b9a8b66",
 "triggerId":"db.myproject.jenkins.certificates.vovaNew.new{}.daily",
@@ -105,9 +109,10 @@ function compareDate(a, b) {
 export default function Triggers({setAlert, setTitle}) {
     const [triggers, setTriggers] = useState(undefined);
     const navigate = useNavigate()
-    const [onlyAlerted,setOnlyAlerted] = useState(true)
-    const [showSuppressed,setShowSuppressed] = useState(false)
-    const [filter,setFilter] = useState("")
+    const onlyAlerted = useSelector((state) => state.triggersOnlyAlerted.value)
+    const showSuppressed = useSelector((state) => state.triggersShowSuppressed.value)
+    const filter = useSelector((state) => state.triggersFilter.value)
+    const dispatch = useDispatch()
 
     function triggersFilter(trigger) {
         if(trigger.suppressed && !showSuppressed) return false
@@ -144,16 +149,16 @@ export default function Triggers({setAlert, setTitle}) {
             <Grid container>
                 <Grid item sx={cellStyle} md={2} xs={6}>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={onlyAlerted} onChange={(e)=>setOnlyAlerted(e.target.checked)}/>} label="Only alerted" />
+                        <FormControlLabel control={<Checkbox checked={onlyAlerted} onChange={(e)=>dispatch(setTriggersOnlyAlerted(e.target.checked))}/>} label="Only alerted" />
                     </FormGroup>
                 </Grid>
                 <Grid item sx={cellStyle} md={2} xs={6}>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={showSuppressed} onChange={(e)=>setShowSuppressed(e.target.checked)}/>} label="Show suppressed" />
+                        <FormControlLabel control={<Checkbox checked={showSuppressed} onChange={(e)=>dispatch(setTriggersShowSuppressed(e.target.checked))}/>} label="Show suppressed" />
                     </FormGroup>
                 </Grid>
                 <Grid item sx={cellStyle} md={2} xs={12}>
-                    <TextField fullWidth id="outlined-basic" label="Filter" value={filter} onChange={event => setFilter(event.target.value)} variant="standard" />
+                    <TextField fullWidth id="outlined-basic" label="Filter" value={filter} onChange={event => dispatch(setTriggersFilter(event.target.value))} variant="standard" />
                 </Grid>
             </Grid>
             {triggers !== undefined

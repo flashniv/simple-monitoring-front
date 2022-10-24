@@ -2,12 +2,12 @@ import React, {useState} from "react";
 import {
     AppBar,
     Box,
-    Button,
+    Button, Collapse,
     CssBaseline,
     Drawer,
     IconButton,
     List,
-    ListItemButton,
+    ListItemButton, ListItemIcon,
     ListItemText,
     Toolbar,
     Typography
@@ -16,12 +16,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import {useNavigate} from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import SmsIcon from '@mui/icons-material/Sms';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import API from "../../API/API";
+import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 
 export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) {
     const [showSidebar, setShowSidebar] = useState(false)
+    const [openReports,setOpenReports] = useState(false)
     const navigate = useNavigate()
 
     const logout = function () {
@@ -131,6 +132,25 @@ export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) 
                                 <AlternateEmailIcon/>
                                 <ListItemText sx={{ml: 2}} primary="Items"/>
                             </ListItemButton>
+                            <ListItemButton onClick={()=>setOpenReports(!openReports)}>
+                                <AlternateEmailIcon/>
+                                <ListItemText sx={{ml: 2}} primary="Reports" />
+                                {openReports ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openReports} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItemButton
+                                        sx={{ pl: 4 }}
+                                        onClick={()=>{
+                                            navigate("/triggersReport", {replace: false});
+                                            setShowSidebar(false);
+                                        }}
+                                    >
+                                        <StarBorder />
+                                        <ListItemText sx={{ml: 2}} primary="Triggers" />
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
                         </>
                         : <></>
                     }

@@ -127,7 +127,10 @@ export default class API {
     }
 
     static getEventsByParameterGroupId(parameterGroupId, begin, end) {
-        const response = API.getContent("/api/v1/event/" + parameterGroupId + "?begin=" + begin.toISOString() + "&end=" + end.toISOString());
-        return response
+        return API.getContent("/api/v1/event/" + parameterGroupId + "?begin=" + begin.toISOString() + "&end=" + end.toISOString())
     }
+    static getTriggerDetailAsync(triggerId, onSuccess, onFailure) {
+        return API.getContent("/api/v1/trigger/" + triggerId)
+    }
+
 }

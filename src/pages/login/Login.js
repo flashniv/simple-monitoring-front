@@ -35,10 +35,6 @@ export default function Login({setLoggedIn, setTitle}) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
         API.loginUser(data.get('email'),data.get('password'),()=>{
             setLoggedIn(true);
             navigate("/",{"replace":true})

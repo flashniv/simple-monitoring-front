@@ -132,5 +132,29 @@ export default class API {
     static getTriggerDetailAsync(triggerId, onSuccess, onFailure) {
         return API.getContent("/api/v1/trigger/" + triggerId)
     }
+    static deleteAllTriggers(selectedTriggers, onSuccess, onFailure) {
+        const response = API.postContent("/api/v1/trigger/deleteAll",selectedTriggers);
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
+    static suppressAllTriggers(selectedTriggers,suppress, onSuccess, onFailure) {
+        const response = API.postContent("/api/v1/trigger/suppressAll?suppress="+suppress,selectedTriggers);
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
+    static enableAllTriggers(selectedTriggers,enable, onSuccess, onFailure) {
+        const response = API.postContent("/api/v1/trigger/enableAll?enable="+enable,selectedTriggers);
+        response.then((value) => {
+            onSuccess(value.data)
+        }, (reason) => {
+            onFailure(reason)
+        })
+    }
 
 }

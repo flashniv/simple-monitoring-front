@@ -1,8 +1,8 @@
 import React from "react";
-import {Checkbox, Grid} from "@mui/material";
+import {Box, Checkbox, Grid} from "@mui/material";
 
-const rowStyle={
-    borderBottom:"1px solid lightgrey"
+const rowStyle = {
+    borderBottom: "1px solid lightgrey"
 }
 
 export default function TriggerConfigurationItem({trigger, selectedTriggers, setSelectedTriggers}) {
@@ -21,21 +21,29 @@ export default function TriggerConfigurationItem({trigger, selectedTriggers, set
                 <Checkbox
                     checked={checked}
                     onChange={setChecked}
-                    inputProps={{ 'aria-label': 'controlled' }}
+                    inputProps={{'aria-label': 'controlled'}}
                 />
             </Grid>
             <Grid sx={rowStyle} xs={1} item>
                 {trigger.lastStatus}
             </Grid>
             <Grid sx={rowStyle} xs={1} item>
-                {trigger.suppressed?"Suppressed":""}
+                {trigger.suppressed ? "Suppressed" : ""}
             </Grid>
             <Grid sx={rowStyle} xs={1} item>
-                {!trigger.enabled?"Disabled":""}
+                {!trigger.enabled ? "Disabled" : ""}
             </Grid>
             <Grid sx={rowStyle} xs={8} item>
-                {trigger.name}<br/>
-                {trigger.triggerId}
+                <Box
+                    sx={{fontWeight:"bold"}}
+                >
+                    {trigger.name}
+                </Box>
+                <Box
+                    sx={{color:"gray"}}
+                >
+                    {trigger.triggerId}
+                </Box>
             </Grid>
         </React.Fragment>
 

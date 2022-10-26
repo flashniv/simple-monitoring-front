@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Backdrop, Box, CircularProgress, Grid, IconButton, TextField} from "@mui/material";
+import {Alert, Backdrop, Box, Button, CircularProgress, Grid, IconButton, TextField} from "@mui/material";
 import API from "../../../API/API";
 import TriggerConfigurationItem from "./TriggerConfigurationItem";
 import SortIcon from '@mui/icons-material/Sort';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 const headerStyle = {
     p: 1,
@@ -47,11 +49,112 @@ export default function TriggersConfiguration({setAlert, setTitle}) {
         }
     }
 
+    const filterFunc = function (trigger) {
+        if (triggerFilter.length === 0) return true
+        return trigger.triggerId.includes(triggerFilter)
+    }
+
+    const selectAll = function () {
+        let newSelect = []
+        triggers.filter(filterFunc).map(trigger => {
+            newSelect.push(trigger.id)
+        })
+        setSelectedTriggers(newSelect)
+    }
+
+    const enableAll=function (enable) {
+        if(window.confirm("Are you sure?")) {
+            API.enableAllTriggers(selectedTriggers,enable,()=>{
+                updTriggers()
+            },(reason)=>{
+                setAlert(<Alert severity={"error"}>Server error!</Alert>)
+            })
+        }
+    }
+
+    const suppressAll=function (suppress) {
+        if(window.confirm("Are you sure?")) {
+            API.suppressAllTriggers(selectedTriggers,suppress,()=>{
+                updTriggers()
+            },(reason)=>{
+                setAlert(<Alert severity={"error"}>Server error!</Alert>)
+            })
+        }
+    }
+
+    const deleteAll=function () {
+        if(window.confirm("Are you sure?")) {
+            API.deleteAllTriggers(selectedTriggers,()=>{
+                setSelectedTriggers([])
+                updTriggers()
+            },(reason)=>{
+                setAlert(<Alert severity={"error"}>Server error!</Alert>)
+            })
+        }
+    }
+
     return (
         <>
             {triggers !== undefined
                 ? <Grid container>
-                    <Grid sx={headerStyle} xs={1} item></Grid>
+                    <Grid
+                        sx={{
+                            p: 1,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems:"center"
+                        }}
+                        xs={12}
+                        item
+                    >
+                        <span>Selected: {selectedTriggers.length}</span>
+                        <Box>
+                            <Button
+                                sx={{mr:1}}
+                                variant={"outlined"}
+                                onClick={deleteAll}
+                            >
+                                Delete all
+                            </Button>
+                            <Button
+                                sx={{mr:1}}
+                                variant={"outlined"}
+                                onClick={()=>enableAll(true)}
+                            >
+                                Enable all
+                            </Button>
+                            <Button
+                                sx={{mr:1}}
+                                variant={"outlined"}
+                                onClick={()=>enableAll(false)}
+                            >
+                                Disable all
+                            </Button>
+                            <Button
+                                sx={{mr:1}}
+                                variant={"outlined"}
+                                onClick={()=>suppressAll(true)}
+                            >
+                                Suppress all
+                            </Button>
+                            <Button
+                                variant={"outlined"}
+                                onClick={()=>suppressAll(false)}
+                            >
+                                Unsuppress all
+                            </Button>
+                        </Box>
+                    </Grid>
+                    <Grid sx={headerStyle} xs={1} item>
+                        {selectedTriggers.length !== 0
+                            ? <IconButton onClick={() => setSelectedTriggers([])}>
+                                <CheckBoxOutlineBlankIcon/>
+                            </IconButton>
+                            : <IconButton onClick={selectAll}>
+                                <DoneAllIcon/>
+                            </IconButton>
+                        }
+                    </Grid>
                     <Grid sx={headerStyle} xs={1} item>
                         Status
                         <IconButton onClick={() => setSortField(1)}>
@@ -81,12 +184,15 @@ export default function TriggersConfiguration({setAlert, setTitle}) {
                             id={"triggerFilter"}
                             label={"Filter"}
                             value={triggerFilter}
-                            onChange={(e) => setTriggerFilter(e.target.value)}
+                            onChange={(e) => {
+                                setTriggerFilter(e.target.value);
+                                setSelectedTriggers([])
+                            }}
                             variant={"standard"}
                             sx={{width: "300px"}}
                         />
                     </Grid>
-                    {triggers.sort(sortFunc).map(trigger =>
+                    {triggers.sort(sortFunc).filter(filterFunc).map(trigger =>
                         <TriggerConfigurationItem key={trigger.id} trigger={trigger} selectedTriggers={selectedTriggers}
                                                   setSelectedTriggers={setSelectedTriggers}/>
                     )}

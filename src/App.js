@@ -10,6 +10,7 @@ import TriggerDetail from "./pages/triggers/TriggerDetail";
 import Item from "./pages/item/Item";
 import Items from "./pages/items/Items";
 import TriggersReport from "./pages/reports/triggers/triggersReport/TriggersReport";
+import TriggersConfiguration from "./pages/configuration/triggers/TriggersConfiguration";
 
 let theme = createTheme({
     palette: {
@@ -52,6 +53,7 @@ function App() {
                         <Route path=":itemId" element={<Item setTitle={setTitle} setAlert={setAlertWithTimer}/>}/>
                     </Route>
                     <Route path="/triggersReport" element={<TriggersReport setAlert={setAlertWithTimer} setTitle={setTitle}/>}/>
+                    <Route path="/configuration/triggers" element={<TriggersConfiguration setAlert={setAlertWithTimer} setTitle={setTitle}/>}/>
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

@@ -23,6 +23,7 @@ import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) {
     const [showSidebar, setShowSidebar] = useState(false)
     const [openReports,setOpenReports] = useState(false)
+    const [openConfigs,setOpenConfigs] = useState(false)
     const navigate = useNavigate()
 
     const logout = function () {
@@ -143,6 +144,25 @@ export default function NavBar({title, loggedIn, setLoggedIn, alert, setAlert}) 
                                         sx={{ pl: 4 }}
                                         onClick={()=>{
                                             navigate("/triggersReport", {replace: false});
+                                            setShowSidebar(false);
+                                        }}
+                                    >
+                                        <StarBorder />
+                                        <ListItemText sx={{ml: 2}} primary="Triggers" />
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
+                            <ListItemButton onClick={()=>setOpenConfigs(!openConfigs)}>
+                                <AlternateEmailIcon/>
+                                <ListItemText sx={{ml: 2}} primary="Configuration" />
+                                {openConfigs ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openConfigs} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItemButton
+                                        sx={{ pl: 4 }}
+                                        onClick={()=>{
+                                            navigate("/configuration/triggers", {replace: false});
                                             setShowSidebar(false);
                                         }}
                                     >

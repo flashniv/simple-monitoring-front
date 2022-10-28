@@ -137,6 +137,8 @@ export default function Item({setAlert, setTitle}) {
                             <MenuItem value={43200}>12 hr</MenuItem>
                             <MenuItem value={86400}>1 day</MenuItem>
                             <MenuItem value={172800}>2 days</MenuItem>
+                            <MenuItem value={604800}>7 days</MenuItem>
+                            <MenuItem value={1209600}>14 days</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl sx={{width: "200px"}}>
@@ -157,6 +159,7 @@ export default function Item({setAlert, setTitle}) {
                             <MenuItem value={43200}>12 hr</MenuItem>
                             <MenuItem value={86400}>1 day</MenuItem>
                             <MenuItem value={172800}>2 days</MenuItem>
+                            <MenuItem value={604800}>7 days</MenuItem>
                         </Select>
                     </FormControl>
                             <Graphic series={parameterGroups}/>

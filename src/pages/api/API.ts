@@ -18,7 +18,6 @@ export default class API {
     }
 
     static signIn(authRequest: AuthenticationRequest, onSuccess: (success: AuthenticationResponse) => void, onFailure: (reason: any) => void) {
-        console.log(this.API_URL)
         API.postContent<AuthenticationRequest, AuthenticationResponse>("/authenticate", authRequest)
             .then(value => {
                 onSuccess(value.data);

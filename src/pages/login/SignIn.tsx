@@ -40,8 +40,8 @@ export default function SignIn() {
                 password: inPassword
             };
             API.signIn(authRequest,(success)=>{
-                localStorage.setItem("accessToken",success.accessToken);
-                localStorage.setItem("refreshToken",success.refreshToken);
+                localStorage.setItem("accessToken",success.access_token);
+                localStorage.setItem("refreshToken",success.refresh_token);
             },(reason)=>{
                 //TODO release it
             })

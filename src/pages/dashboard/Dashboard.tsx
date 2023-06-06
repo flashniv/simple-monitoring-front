@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import {styled} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -23,7 +24,6 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import {CircularProgress, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import useOrganizationsQuery from "../../api/graphql/useOrganizationsQuery";
-import {useEffect} from "react";
 
 function Copyright(props: any) {
     return (
@@ -94,14 +94,14 @@ export default function Dashboard() {
     const [selectedOrg, setSelectedOrg] = React.useState("");
 
     useEffect(() => {
-        if(!organizationsQuery.loading && organizationsQuery.data && organizationsQuery.data.organizations && organizationsQuery.data.organizations.length>0) {
-            const orgs=organizationsQuery.data.organizations;
+        if (!organizationsQuery.loading && organizationsQuery.data && organizationsQuery.data.organizations && organizationsQuery.data.organizations.length > 0) {
+            const orgs = organizationsQuery.data.organizations;
             setSelectedOrg(orgs[0].id);
         }
-    },[organizationsQuery.loading])
+    }, [organizationsQuery.loading])
 
     function isLoading() {
-        if(organizationsQuery.loading) return true;
+        if (organizationsQuery.loading) return true;
         return false;
     }
 
@@ -118,7 +118,7 @@ export default function Dashboard() {
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
-                        onClick={()=>setOpen(!open)}
+                        onClick={() => setOpen(!open)}
                         sx={{
                             marginRight: '36px',
                             ...(open && {display: 'none'}),
@@ -136,14 +136,15 @@ export default function Dashboard() {
                         Dashboard
                     </Typography>
                     {isLoading()
-                        ? <CircularProgress sx={{color: "inherit",mr:2}}/>
+                        ? <CircularProgress sx={{color: "inherit", mr: 2}}/>
                         : <></>
                     }
                     <FormControl sx={{m: 1, color: "inherit", minWidth: 220}}>
                         <InputLabel sx={{color: "inherit"}}
                                     id="demo-simple-select-standard-label">Organization</InputLabel>
                         <Select sx={{color: "inherit"}} labelId="demo-simple-select-standard-label"
-                                id="demo-simple-select-standard" label="Organization" value={selectedOrg} onChange={e=>setSelectedOrg(e.target.value)}>
+                                id="demo-simple-select-standard" label="Organization" value={selectedOrg}
+                                onChange={e => setSelectedOrg(e.target.value)}>
                             {organizationsQuery.data?.organizations?.map(value =>
                                 <MenuItem key={value.id} value={value.id}>{value.name}</MenuItem>
                             )}
@@ -165,7 +166,7 @@ export default function Dashboard() {
                         px: [1],
                     }}
                 >
-                    <IconButton onClick={()=>setOpen(!open)}>
+                    <IconButton onClick={() => setOpen(!open)}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </Toolbar>

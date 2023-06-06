@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,12 +11,10 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import Typography from '@mui/material/Typography';
+import {useNavigate} from 'react-router-dom';
 import {AuthenticationRequest} from "../../types/AuthenticationRequest";
 import API from "../../api/API";
 import {AxiosError} from "axios";
-import useOrganizationsQuery from "../../api/graphql/useOrganizationsQuery";
-import {LinearProgress, Stack} from "@mui/material";
-import {useNavigate} from 'react-router-dom';
 
 function Copyright(props: any) {
     return (
@@ -32,71 +29,12 @@ function Copyright(props: any) {
     );
 }
 
-type SelectOrgPageProps = {
+type SignInProps = {
     setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
 }
+export default function SignIn({setAlert}: SignInProps) {
+    const navigate=useNavigate();
 
-function SelectOrgPage({setAlert}: SelectOrgPageProps) {
-    const {data, error, loading} = useOrganizationsQuery();
-    const navigate = useNavigate();
-
-    if (error) {
-        return (
-            <h1>Error...</h1>
-        );
-    }
-
-    function organizationSelect(orgId: string) {
-        localStorage.setItem("organizationId", orgId);
-        navigate("/");
-    }
-
-    return (
-        <>
-            {loading
-                ? <Box sx={{width: '100%'}}>
-                    <LinearProgress/>
-                </Box>
-                : <>
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOpenIcon/>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Select organization
-                    </Typography>
-
-                    <Stack width={"100%"} spacing={2} mt={3}>
-                        {data?.organizations?.map((value, index) =>
-                            <Paper
-                                key={index}
-                                elevation={3}
-                                sx={{
-                                    width: "100%",
-                                    textAlign: "center",
-                                    fontSize: "x-large",
-                                    cursor: "pointer",
-                                    pt: 3,
-                                    pb: 3
-                                }}
-                                onClick={() => organizationSelect(value.id)}
-                            >
-                                {value.name}
-                            </Paper>
-                        )}
-                    </Stack>
-                    <Copyright sx={{mt: 5}}/>
-                </>
-            }
-        </>
-    );
-}
-
-type SignInPageProps = {
-    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-}
-
-function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -111,77 +49,13 @@ function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
             API.signIn(authRequest, (success) => {
                 localStorage.setItem("accessToken", success.access_token);
                 localStorage.setItem("refreshToken", success.refresh_token);
-                setLoggedIn(true);
+                navigate("/dashboard");
             }, (reason) => {
                 setAlert(reason);
             })
         }
     };
 
-    return (
-        <>
-            <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                <LockOpenIcon/>
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Sign in
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                />
-                <FormControlLabel
-                    control={<Checkbox value="remember" color="primary"/>}
-                    label="Remember me"
-                />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{mt: 3, mb: 2}}
-                >
-                    Sign In
-                </Button>
-                <Grid container>
-                    <Grid item xs>
-                        <Link href="#" variant="body2">
-                            Forgot password?
-                        </Link>
-                    </Grid>
-                    <Grid item>
-                        <Link href="#" variant="body2">
-                            {"Don't have an account? Sign Up"}
-                        </Link>
-                    </Grid>
-                </Grid>
-                <Copyright sx={{mt: 5}}/>
-            </Box>
-        </>
-    );
-}
-
-type SignInProps = {
-    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-}
-export default function SignIn({setAlert}: SignInProps) {
-    const [loggedIn, setLoggedIn] = useState<boolean>(false);
     return (
         <Grid container component="main" sx={{height: '100vh'}}>
             <CssBaseline/>
@@ -209,10 +83,59 @@ export default function SignIn({setAlert}: SignInProps) {
                         alignItems: 'center',
                     }}
                 >
-                    {!loggedIn
-                        ? <SignInPage setAlert={setAlert} setLoggedIn={setLoggedIn}/>
-                        : <SelectOrgPage setAlert={setAlert}/>
-                    }
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOpenIcon/>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary"/>}
+                            label="Remember me"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{mt: 3, mb: 2}}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                        <Copyright sx={{mt: 5}}/>
+                    </Box>
                 </Box>
             </Grid>
         </Grid>

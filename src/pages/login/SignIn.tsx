@@ -16,6 +16,8 @@ import {AuthenticationRequest} from "../../types/AuthenticationRequest";
 import API from "../../api/API";
 import {AxiosError} from "axios";
 import useOrganizationsQuery from "../../api/gaphql/useOrganizationsQuery";
+import {LinearProgress, Stack} from "@mui/material";
+import {useNavigate} from 'react-router-dom';
 
 function Copyright(props: any) {
     return (
@@ -35,25 +37,65 @@ type SelectOrgPageProps = {
 }
 
 function SelectOrgPage({setAlert}: SelectOrgPageProps) {
-    const {data, error, loading, refetch} = useOrganizationsQuery();
+    const {data, error, loading} = useOrganizationsQuery();
+    const navigate = useNavigate();
 
-    console.log(data);
-    console.log(error);
-    console.log(loading);
+    if (error) {
+        return (
+            <h1>Error...</h1>
+        );
+    }
+
+    function organizationSelect(orgId: string) {
+        localStorage.setItem("organizationId", orgId);
+        navigate("/");
+    }
 
     return (
         <>
-            <Button onClick={()=>refetch()}>
-                refresh
-            </Button>
+            {loading
+                ? <Box sx={{width: '100%'}}>
+                    <LinearProgress/>
+                </Box>
+                : <>
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOpenIcon/>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Select organization
+                    </Typography>
+
+                    <Stack width={"100%"} spacing={2} mt={3}>
+                        {data?.organizations?.map((value, index) =>
+                            <Paper
+                                key={index}
+                                elevation={3}
+                                sx={{
+                                    width: "100%",
+                                    textAlign: "center",
+                                    fontSize: "x-large",
+                                    cursor: "pointer",
+                                    pt: 3,
+                                    pb: 3
+                                }}
+                                onClick={()=>organizationSelect(value.id)}
+                            >
+                                {value.name}
+                            </Paper>
+                        )}
+                    </Stack>
+                    <Copyright sx={{mt: 5}}/>
+                </>
+            }
         </>
     );
 }
 
-type SignInPageProps = {
-    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-}
+type SignInPageProps =
+    {
+        setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+        setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
+    }
 
 function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -136,10 +178,15 @@ function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
     );
 }
 
-type SignInProps = {
-    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-}
-export default function SignIn({setAlert}: SignInProps) {
+type SignInProps =
+    {
+        setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
+    }
+export default function SignIn(
+    {
+        setAlert
+    }
+        : SignInProps) {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     return (
         <Grid container component="main" sx={{height: '100vh'}}>

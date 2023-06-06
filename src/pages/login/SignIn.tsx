@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import {AuthenticationRequest} from "../../types/AuthenticationRequest";
 import API from "../../api/API";
 import {AxiosError} from "axios";
-import useOrganizationsQuery from "../../api/gaphql/useOrganizationsQuery";
+import useOrganizationsQuery from "../../api/graphql/useOrganizationsQuery";
 import {LinearProgress, Stack} from "@mui/material";
 import {useNavigate} from 'react-router-dom';
 
@@ -78,7 +78,7 @@ function SelectOrgPage({setAlert}: SelectOrgPageProps) {
                                     pt: 3,
                                     pb: 3
                                 }}
-                                onClick={()=>organizationSelect(value.id)}
+                                onClick={() => organizationSelect(value.id)}
                             >
                                 {value.name}
                             </Paper>
@@ -91,11 +91,10 @@ function SelectOrgPage({setAlert}: SelectOrgPageProps) {
     );
 }
 
-type SignInPageProps =
-    {
-        setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-        setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-    }
+type SignInPageProps = {
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
+}
 
 function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -178,15 +177,10 @@ function SignInPage({setLoggedIn, setAlert}: SignInPageProps) {
     );
 }
 
-type SignInProps =
-    {
-        setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
-    }
-export default function SignIn(
-    {
-        setAlert
-    }
-        : SignInProps) {
+type SignInProps = {
+    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
+}
+export default function SignIn({setAlert}: SignInProps) {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     return (
         <Grid container component="main" sx={{height: '100vh'}}>

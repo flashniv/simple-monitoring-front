@@ -5,7 +5,7 @@ import {ThemeProvider} from "@emotion/react";
 import SignIn from "./pages/login/SignIn";
 import Index from "./pages/index/Index";
 import {ApolloProvider} from "@apollo/client";
-import {apolloClient} from "./api/gaphql/MyApolloClient";
+import {apolloClient} from "./api/graphql/MyApolloClient";
 
 const defaultTheme = createTheme();
 

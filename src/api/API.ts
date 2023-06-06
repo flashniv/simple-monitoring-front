@@ -1,11 +1,9 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
-import {AuthenticationResponse} from "../../types/AuthenticationResponse";
-import {AuthenticationRequest} from "../../types/AuthenticationRequest";
+import axios, {AxiosResponse} from 'axios';
+import {AuthenticationResponse} from "../types/AuthenticationResponse";
+import {AuthenticationRequest} from "../types/AuthenticationRequest";
 
 export default class API {
-    static API_URL: string = 'https://simple-api-stage.flash.biz.ua/api/v1/auth';
-
-    //static URL:string = 'http://localhost:8080/api/v1/account';
+    static API_URL = process.env.REACT_APP_API_URL;
 
     static async postContent<D, R>(path: string, data?: D, config?: any): Promise<AxiosResponse<R>> {
         console.log("post " + this.API_URL + path)

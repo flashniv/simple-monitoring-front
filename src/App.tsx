@@ -6,12 +6,13 @@ import SignIn from "./pages/login/SignIn";
 import Index from "./pages/index/Index";
 import {ApolloProvider} from "@apollo/client";
 import {apolloClient} from "./api/graphql/MyApolloClient";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 const defaultTheme = createTheme();
 
 function App() {
     const [loggedIn, setLoggedIn] = useState()
-    const [alert,setAlert] = useState<any>();
+    const [alert, setAlert] = useState<any>();
     return (
         <ThemeProvider theme={defaultTheme}>
             <ApolloProvider client={apolloClient}>
@@ -19,6 +20,7 @@ function App() {
                     <Routes>
                         <Route path={"/"} element={<Index/>}/>
                         <Route path={"/sign-in"} element={<SignIn setAlert={setAlert}/>}/>
+                        <Route path={"/dashboard"} element={<Dashboard/>}/>
                     </Routes>
                 </BrowserRouter>
             </ApolloProvider>

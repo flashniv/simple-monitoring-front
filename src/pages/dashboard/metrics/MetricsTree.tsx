@@ -5,6 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import {Metric} from "../../../types/Metric";
+import {Grid, Paper} from "@mui/material";
 
 type TreeJsonItem = {
     id: number;
@@ -43,8 +44,7 @@ export default function MetricsTree({metrics}: MetricsTreeProps) {
             })
         })
         setTreeItems(newItems)
-
-    }, []);
+    }, [metrics]);
 
     const renderTree = (nodes: TreeJsonItem) => (
         <TreeItem
@@ -60,19 +60,27 @@ export default function MetricsTree({metrics}: MetricsTreeProps) {
     );
 
     return (
-        <TreeView
-            aria-label="file system navigator"
-            defaultCollapseIcon={<ExpandMoreIcon/>}
-            defaultExpandIcon={<ChevronRightIcon/>}
-            sx={{
-                backgroundColor:"white",
-                height:"100vh",
-                flexGrow: 1,
-                maxWidth: 300,
-                overflowY: 'auto'
-            }}
-        >
-            {renderTree(treeItems)}
-        </TreeView>
+        <Grid item xs={3}>
+            <Paper
+                sx={{
+                    p: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: "100vh"
+                }}
+            >
+                <TreeView
+                    aria-label="file system navigator"
+                    defaultCollapseIcon={<ExpandMoreIcon/>}
+                    defaultExpandIcon={<ChevronRightIcon/>}
+                    sx={{
+                        flexGrow: 1,
+                        overflowY: 'auto'
+                    }}
+                >
+                    {renderTree(treeItems)}
+                </TreeView>
+            </Paper>
+        </Grid>
     );
 }

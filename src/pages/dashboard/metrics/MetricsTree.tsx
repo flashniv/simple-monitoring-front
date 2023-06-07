@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import {Metric} from "../../../types/Metric";
-import {Grid, Paper} from "@mui/material";
+import {Grid, Paper, Typography} from "@mui/material";
 
 type TreeJsonItem = {
     id: number;
@@ -16,10 +16,17 @@ type TreeJsonItem = {
 
 type MetricsTreeProps = {
     metrics: Metric[];
+    setSelectedMetrics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-export default function MetricsTree({metrics}: MetricsTreeProps) {
+export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreeProps) {
     const [treeItems, setTreeItems] = useState<TreeJsonItem>({id: 0, name: "metrics", path: "", childs: {}})
+
+    const openDetails = function (node:TreeJsonItem) {
+        if (Object.keys(node.childs).length === 0) {
+            setSelectedMetrics(node.id);
+        }
+    }
 
     useEffect(() => {
         let i = 0;
@@ -51,6 +58,7 @@ export default function MetricsTree({metrics}: MetricsTreeProps) {
             key={'' + nodes.id}
             nodeId={'' + nodes.id}
             label={nodes.name}
+            onClick={()=>openDetails(nodes)}
         >
             {Object.keys(nodes.childs).length !== 0
                 ? Object.keys(nodes.childs).map((node) => renderTree(nodes.childs[node]))
@@ -69,13 +77,15 @@ export default function MetricsTree({metrics}: MetricsTreeProps) {
                     height: "100vh"
                 }}
             >
+                <Typography textAlign={"center"} fontWeight={"bold"}>Metrics</Typography>
                 <TreeView
                     aria-label="file system navigator"
                     defaultCollapseIcon={<ExpandMoreIcon/>}
                     defaultExpandIcon={<ChevronRightIcon/>}
                     sx={{
                         flexGrow: 1,
-                        overflowY: 'auto'
+                        overflowY: 'auto',
+                        border:"1px solid lightgray"
                     }}
                 >
                     {renderTree(treeItems)}

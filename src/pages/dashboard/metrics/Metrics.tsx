@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import useMetricsQuery from "../../../api/graphql/useMetricsQuery";
 import {Box, Grid, Skeleton} from "@mui/material";
 import MetricsTree from "./MetricsTree";
@@ -10,6 +10,7 @@ type MetricsProps = {
 }
 export default function Metrics({orgId, setAlert}: MetricsProps) {
     const {data, error, loading} = useMetricsQuery(orgId);
+    const [selectedMetric,setSelectedMetric]=useState<number|undefined>(undefined);
 
     if (error) {
         setAlert(error);
@@ -26,7 +27,8 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
                     <Skeleton variant="rectangular" height={"100vh"}/>
                 </Grid>
                 <Grid item xs={9}>
-                    <Skeleton variant="rectangular" height={"100vh"}/>
+                    <Skeleton variant="rectangular" height={"49vh"} sx={{mb:1}}/>
+                    <Skeleton variant="rectangular" height={"50vh"}/>
                 </Grid>
             </Grid>
         )
@@ -34,10 +36,10 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
     return (
         <Grid container columns={{xs: 3, sm: 3, md: 12, lg: 12}} spacing={2} pl={2} pr={2} pb={2} pt={3}>
             {data?.metrics !== undefined
-                ? <MetricsTree metrics={data?.metrics}/>
+                ? <MetricsTree metrics={data?.metrics} setSelectedMetrics={setSelectedMetric}/>
                 : <></>
             }
-            <MetricGraph/>
+            <MetricGraph metric={selectedMetric}/>
         </Grid>
     );
 }

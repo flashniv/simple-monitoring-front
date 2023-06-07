@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import useMetricsQuery from "../../../api/graphql/useMetricsQuery";
-import {Box, Grid, Skeleton} from "@mui/material";
+import {Box, Grid, Paper, Skeleton, Typography} from "@mui/material";
 import MetricsTree from "./MetricsTree";
 import MetricGraph from "./MetricGraph";
 
@@ -10,7 +10,7 @@ type MetricsProps = {
 }
 export default function Metrics({orgId, setAlert}: MetricsProps) {
     const {data, error, loading} = useMetricsQuery(orgId);
-    const [selectedMetric,setSelectedMetric]=useState<number|undefined>(undefined);
+    const [selectedMetric, setSelectedMetric] = useState<number | undefined>(undefined);
 
     if (error) {
         setAlert(error);
@@ -27,7 +27,7 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
                     <Skeleton variant="rectangular" height={"100vh"}/>
                 </Grid>
                 <Grid item xs={9}>
-                    <Skeleton variant="rectangular" height={"49vh"} sx={{mb:1}}/>
+                    <Skeleton variant="rectangular" height={"49vh"} sx={{mb: 1}}/>
                     <Skeleton variant="rectangular" height={"50vh"}/>
                 </Grid>
             </Grid>
@@ -39,7 +39,40 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
                 ? <MetricsTree metrics={data?.metrics} setSelectedMetrics={setSelectedMetric}/>
                 : <></>
             }
-            <MetricGraph metric={selectedMetric}/>
+            {selectedMetric === undefined
+                ? <Grid item xs={9}>
+                    <Paper
+                        sx={{
+                            p: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: "49vh",
+                            mb: 1
+                        }}
+                    >
+                        <Typography sx={{fontSize: "xxx-large", color: "lightgray", fontWeight: "bolder"}}>
+                            Please select metric
+                        </Typography>
+                    </Paper>
+                    <Paper
+                        sx={{
+                            p: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: "50vh"
+                        }}
+                    >
+                        <Typography sx={{fontSize: "xxx-large", color: "lightgray", fontWeight: "bolder"}}>
+                            Please select metric
+                        </Typography>
+                    </Paper>
+                </Grid>
+                : <MetricGraph metric={selectedMetric}/>
+            }
         </Grid>
     );
 }

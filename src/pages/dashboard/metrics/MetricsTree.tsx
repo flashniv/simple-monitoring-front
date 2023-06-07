@@ -9,6 +9,7 @@ import {Grid, Paper, Typography} from "@mui/material";
 
 type TreeJsonItem = {
     id: number;
+    metricId: number;
     name: string;
     path: string;
     childs: Record<string, TreeJsonItem>;
@@ -19,12 +20,18 @@ type MetricsTreeProps = {
     setSelectedMetrics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreeProps) {
-    const [treeItems, setTreeItems] = useState<TreeJsonItem>({id: 0, name: "metrics", path: "", childs: {}})
+export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreeProps) {
+    const [treeItems, setTreeItems] = useState<TreeJsonItem>({
+        id: 0,
+        metricId: 0,
+        name: "metrics",
+        path: "",
+        childs: {}
+    })
 
-    const openDetails = function (node:TreeJsonItem) {
+    const openDetails = function (node: TreeJsonItem) {
         if (Object.keys(node.childs).length === 0) {
-            setSelectedMetrics(node.id);
+            setSelectedMetrics(node.metricId);
         }
     }
 
@@ -32,6 +39,7 @@ export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreePro
         let i = 0;
         let newItems: TreeJsonItem = {
             id: i,
+            metricId: -1,
             name: "items",
             path: "",
             childs: {}
@@ -42,6 +50,7 @@ export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreePro
                 if (!head.childs.hasOwnProperty(part)) {
                     head.childs[part] = {
                         id: ++i,
+                        metricId:metric.id,
                         name: part,
                         path: metric.name,
                         childs: {}
@@ -58,7 +67,7 @@ export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreePro
             key={'' + nodes.id}
             nodeId={'' + nodes.id}
             label={nodes.name}
-            onClick={()=>openDetails(nodes)}
+            onClick={() => openDetails(nodes)}
         >
             {Object.keys(nodes.childs).length !== 0
                 ? Object.keys(nodes.childs).map((node) => renderTree(nodes.childs[node]))
@@ -85,7 +94,7 @@ export default function MetricsTree({metrics,setSelectedMetrics}: MetricsTreePro
                     sx={{
                         flexGrow: 1,
                         overflowY: 'auto',
-                        border:"1px solid lightgray"
+                        border: "1px solid lightgray"
                     }}
                 >
                     {renderTree(treeItems)}

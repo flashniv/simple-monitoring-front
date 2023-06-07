@@ -1,50 +1,22 @@
 import React from 'react';
-import {Grid, Paper, Typography} from "@mui/material";
+import {Grid, Paper, Skeleton, Typography} from "@mui/material";
+import useMetricQuery from "../../../api/graphql/useMetricQuery";
 
-type MetricGraphProps={
-    metric:number|undefined;
+type MetricGraphProps = {
+    metric: number;
 }
 
-export default function MetricGraph({metric}:MetricGraphProps) {
-    return(
-        <Grid item xs={9}>
-            <Paper
-                sx={{
-                    p: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    height: "49vh",
-                    mb:1
-                }}
-            >
-                {metric===undefined
-                    ?<Typography sx={{fontSize:"xxx-large",color:"lightgray",fontWeight:"bolder"}} >
-                        Please select metric
-                    </Typography>
-                    :<></>
-                }
-            </Paper>
-            <Paper
-                sx={{
-                    p: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    height: "50vh"
-                }}
-            >
-                {metric===undefined
-                    ?<Typography
-                        sx={{fontSize:"xxx-large",color:"lightgray",fontWeight:"bolder"}}
-                    >
-                        Please select metric
-                    </Typography>
-                    :<></>
-                }
-            </Paper>
-        </Grid>
+export default function MetricGraph({metric}: MetricGraphProps) {
+    const {data, loading, error} = useMetricQuery(metric);
+    if (loading) {
+        return (
+            <Grid item xs={9}>
+                <Skeleton variant="rectangular" height={"49vh"} sx={{mb: 1}}/>
+                <Skeleton variant="rectangular" height={"50vh"}/>
+            </Grid>
+        )
+    }
+    return (
+        <>tyt</>
     )
 }

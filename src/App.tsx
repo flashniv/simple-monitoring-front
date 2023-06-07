@@ -11,7 +11,6 @@ import Dashboard from "./pages/dashboard/Dashboard";
 const defaultTheme = createTheme();
 
 function App() {
-    const [loggedIn, setLoggedIn] = useState()
     const [alert, setAlert] = useState<any>();
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -20,7 +19,7 @@ function App() {
                     <Routes>
                         <Route path={"/"} element={<Index/>}/>
                         <Route path={"/sign-in"} element={<SignIn setAlert={setAlert}/>}/>
-                        <Route path={"/dashboard"} element={<Dashboard/>}/>
+                        <Route path={"/dashboard"} element={<Dashboard setAlert={setAlert}/>}/>
                     </Routes>
                 </BrowserRouter>
             </ApolloProvider>

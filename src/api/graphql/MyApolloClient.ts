@@ -5,7 +5,7 @@ const httpLink = new HttpLink({ uri: process.env.REACT_APP_GRAPHQL_API_URL });
 const authLink = new ApolloLink((operation, forward) => {
     // Retrieve the authorization token from local storage.
     const token = localStorage.getItem('accessToken');
-    console.log(token);
+
     // Use the setContext method to set the HTTP headers.
     operation.setContext({
         headers: {

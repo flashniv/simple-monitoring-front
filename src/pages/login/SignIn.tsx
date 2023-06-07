@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import {useNavigate} from 'react-router-dom';
 import {AuthenticationRequest} from "../../types/AuthenticationRequest";
 import API from "../../api/API";
-import {AxiosError} from "axios";
 
 function Copyright(props: any) {
     return (
@@ -30,7 +29,7 @@ function Copyright(props: any) {
 }
 
 type SignInProps = {
-    setAlert: React.Dispatch<React.SetStateAction<AxiosError<any>>>;
+    setAlert: React.Dispatch<React.SetStateAction<any>>;
 }
 export default function SignIn({setAlert}: SignInProps) {
     const navigate=useNavigate();

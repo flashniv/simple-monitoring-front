@@ -6,14 +6,14 @@ interface MetricQueryResponse {
 }
 
 const REQUEST = gql`
-    query Metric($metricId:ID!){
+    query Metric($metricId:ID!,$beginDiff:Int!,$endDiff:Int!){
         metric(metricId:$metricId){
             id
             name
             parameterGroups{
                 id
                 parameters
-                dataItems{
+                dataItems(beginDiff:$beginDiff,endDiff:$endDiff){
                     timestamp
                     value
                 }
@@ -22,10 +22,12 @@ const REQUEST = gql`
     }
 `;
 
-export default function useMetricQuery(metricId:number) {
+export default function useMetricQuery(metricId:number,beginDiff:number,endDiff:number) {
     return useQuery<MetricQueryResponse>(REQUEST,{
         variables:{
-            metricId
+            metricId,
+            beginDiff,
+            endDiff
         }
     });
 }

@@ -30,7 +30,7 @@ export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreePr
     })
 
     const openDetails = function (node: TreeJsonItem) {
-        if (Object.keys(node.childs).length === 0) {
+        if (Object.keys(node.childs).length === 0 && node.metricId!==-1) {
             setSelectedMetrics(node.metricId);
         }
     }

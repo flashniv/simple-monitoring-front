@@ -2,7 +2,7 @@ import {gql, useQuery} from '@apollo/client';
 import {Metric} from "../../types/Metric";
 
 interface MetricQueryResponse {
-    metric: Metric[];
+    metric: Metric;
 }
 
 const REQUEST = gql`

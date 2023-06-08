@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import useMetricsQuery from "../../../api/graphql/useMetricsQuery";
 import {Box, Grid, Paper, Skeleton, Typography} from "@mui/material";
 import MetricsTree from "./MetricsTree";
-import MetricGraph from "./MetricGraph";
+import MetricDetails from "./metric-graph/MetricDetails";
 
 type MetricsProps = {
     orgId: string;
@@ -71,7 +71,7 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
                         </Typography>
                     </Paper>
                 </Grid>
-                : <MetricGraph metric={selectedMetric}/>
+                : <MetricDetails metric={selectedMetric}/>
             }
         </Grid>
     );

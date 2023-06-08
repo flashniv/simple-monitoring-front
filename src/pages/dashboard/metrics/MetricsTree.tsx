@@ -5,7 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import {Metric} from "../../../types/Metric";
-import {Grid, Paper, Typography} from "@mui/material";
+import {Box, Grid, IconButton, Paper, Typography} from "@mui/material";
+import SyncIcon from "@mui/icons-material/Sync";
 
 type TreeJsonItem = {
     id: number;
@@ -18,9 +19,10 @@ type TreeJsonItem = {
 type MetricsTreeProps = {
     metrics: Metric[];
     setSelectedMetrics: React.Dispatch<React.SetStateAction<number | undefined>>;
+    refreshMetrics: () => void;
 }
 
-export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreeProps) {
+export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics}: MetricsTreeProps) {
     const [treeItems, setTreeItems] = useState<TreeJsonItem>({
         id: 0,
         metricId: 0,
@@ -30,7 +32,7 @@ export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreePr
     })
 
     const openDetails = function (node: TreeJsonItem) {
-        if (Object.keys(node.childs).length === 0 && node.metricId!==-1) {
+        if (Object.keys(node.childs).length === 0 && node.metricId !== -1) {
             setSelectedMetrics(node.metricId);
         }
     }
@@ -50,7 +52,7 @@ export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreePr
                 if (!head.childs.hasOwnProperty(part)) {
                     head.childs[part] = {
                         id: ++i,
-                        metricId:metric.id,
+                        metricId: metric.id,
                         name: part,
                         path: metric.name,
                         childs: {}
@@ -86,7 +88,12 @@ export default function MetricsTree({metrics, setSelectedMetrics}: MetricsTreePr
                     height: "100vh"
                 }}
             >
-                <Typography textAlign={"center"} fontWeight={"bold"}>Metrics</Typography>
+                <Box sx={{display:"flex",alignItems:"center"}}>
+                    <Typography textAlign={"center"} fontWeight={"bold"} width={"100%"}>Metrics</Typography>
+                    <IconButton onClick={refreshMetrics}>
+                        <SyncIcon/>
+                    </IconButton>
+                </Box>
                 <TreeView
                     aria-label="file system navigator"
                     defaultCollapseIcon={<ExpandMoreIcon/>}

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Trigger, TriggerStatus} from "../../types/Trigger";
-import {Box, Button, Card, CardActions, CardContent, Grid, Typography} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Checkbox, Grid, TextField, Typography} from "@mui/material";
 
 function getTimeAgo(inputDate: string) {
     const startDate = new Date(inputDate)
@@ -67,7 +67,6 @@ function dateSort(a: Trigger, b: Trigger) {
 }
 
 function getStyle(status: TriggerStatus) {
-    console.log(status.toLocaleString().localeCompare("OK") === 0)
     if (status.toLocaleString().localeCompare("OK") === 0) {
         return okTrigger;
     } else if (status.toLocaleString().localeCompare("ERROR") === 0) {
@@ -79,46 +78,69 @@ function getStyle(status: TriggerStatus) {
 }
 
 export default function TriggersTimeLine({triggers}: TriggersTimeLineProps) {
-    return (
+    const [filter, setFilter] = useState("");
+    const [onlyAlerted, setOnlyAlerted] = useState(false);
 
-        <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}}>
-            {triggers.sort(dateSort).map(value =>
-                <Grid xs={3}>
-                    <Box p={1}>
-                        <Card
-                            sx={
-                                value.lastStatus.toLocaleString().localeCompare("OK") === 0
-                                    ? {backgroundColor: "#d5ffce"}
-                                    : {backgroundColor: "#ffcece"}
-                            }
-                        >
-                            <CardContent>
-                                <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                        {getTimeAgo(value.lastStatusUpdate)}
-                                    </Typography>
-                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                        {new Date(value.lastStatusUpdate).toLocaleString()}
-                                    </Typography>
-                                </Box>
-                                <Box sx={{display: "flex", alignItems: "center"}}>
-                                    <Box sx={getStyle(value.lastStatus)}/>
-                                    <Typography variant="h6" component="div">
-                                        {value.lastStatus}
-                                    </Typography>
-                                </Box>
-                                <Typography sx={{mb: 1.5, minHeight: 70, wordBreak: "break-all"}}
-                                            color="text.secondary">
-                                    {value.name}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                    </Box>
+    function filterFunc(trigger: Trigger) {
+        if (trigger.lastStatus.toLocaleString().localeCompare("OK") === 0 && onlyAlerted) return false;
+        if (!trigger.name.includes(filter)) return false;
+        return true;
+    }
+
+    return (
+        <>
+            <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}}>
+                <Grid item xs={3}>
+                    <TextField
+                        variant={"standard"}
+                        label={"Search"}
+                        value={filter}
+                        onChange={event => setFilter(event.target.value)}
+                        fullWidth
+                    />
                 </Grid>
-            )}
-        </Grid>
+                <Grid item xs={3} sx={{display:"flex",alignItems:"center"}}>
+                    Only alerted
+                    <Checkbox
+                        value={onlyAlerted}
+                        onChange={event => setOnlyAlerted(event.target.checked)}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}}>
+                {triggers.filter(filterFunc).sort(dateSort).map(value =>
+                    <Grid xs={3}>
+                        <Box p={1}>
+                            <Card
+                                sx={value.lastStatus.toLocaleString().localeCompare("OK") === 0 ? {backgroundColor: "#d5ffce"} : {backgroundColor: "#ffcece"}}>
+                                <CardContent>
+                                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                        <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                            {getTimeAgo(value.lastStatusUpdate)}
+                                        </Typography>
+                                        <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                            {new Date(value.lastStatusUpdate).toLocaleString()}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{display: "flex", alignItems: "center"}}>
+                                        <Box sx={getStyle(value.lastStatus)}/>
+                                        <Typography variant="h6" component="div">
+                                            {value.lastStatus}
+                                        </Typography>
+                                    </Box>
+                                    <Typography sx={{mb: 1.5, minHeight: 70, wordBreak: "break-all"}}
+                                                color="text.secondary">
+                                        {value.name}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Learn More</Button>
+                                </CardActions>
+                            </Card>
+                        </Box>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }

@@ -25,6 +25,7 @@ import ListItemText from "@mui/material/ListItemText";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import Metrics from "./metrics/Metrics";
+import Alerts from "../alerts/Alerts";
 
 function Copyright(props: any) {
     return (
@@ -213,6 +214,7 @@ export default function Dashboard({setAlert}: DashboardProps) {
                 <Toolbar/>
                 {currentPage === 1 ? <Summary/> : <></>}
                 {currentPage === 2 ? <Metrics setAlert={setAlert} orgId={selectedOrg}/> : <></>}
+                {currentPage === 3 ? <Alerts setAlert={setAlert} orgId={selectedOrg}/> : <></>}
                 <Copyright sx={{pt: 4}}/>
             </Box>
         </Box>

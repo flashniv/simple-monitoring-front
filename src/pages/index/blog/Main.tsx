@@ -17,7 +17,7 @@ export default function Main(props: MainProps) {
                 {title}
             </Typography>
             <Divider/>
-            <Markdown />
+            <Markdown/>
         </Grid>
     );
 }

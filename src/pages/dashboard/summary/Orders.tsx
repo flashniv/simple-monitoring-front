@@ -16,7 +16,7 @@ function createData(
     paymentMethod: string,
     amount: number,
 ) {
-    return { id, date, name, shipTo, paymentMethod, amount };
+    return {id, date, name, shipTo, paymentMethod, amount};
 }
 
 const rows = [
@@ -85,7 +85,7 @@ export default function Orders() {
                     ))}
                 </TableBody>
             </Table>
-            <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+            <Link color="primary" href="#" onClick={preventDefault} sx={{mt: 3}}>
                 See more orders
             </Link>
         </React.Fragment>

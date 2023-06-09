@@ -1,6 +1,6 @@
 import {ApolloClient, ApolloLink, HttpLink, InMemoryCache} from '@apollo/client';
 
-const httpLink = new HttpLink({ uri: process.env.REACT_APP_GRAPHQL_API_URL });
+const httpLink = new HttpLink({uri: process.env.REACT_APP_GRAPHQL_API_URL});
 
 const authLink = new ApolloLink((operation, forward) => {
     // Retrieve the authorization token from local storage.

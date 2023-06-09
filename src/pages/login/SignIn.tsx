@@ -32,7 +32,7 @@ type SignInProps = {
     setAlert: React.Dispatch<React.SetStateAction<any>>;
 }
 export default function SignIn({setAlert}: SignInProps) {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

@@ -20,7 +20,7 @@ type Statistic = {
     max: number | undefined;
 }
 
-function jsonToView(json:string) {
+function jsonToView(json: string) {
     let res = ''
     const nameObj = JSON.parse(json);
 
@@ -35,11 +35,11 @@ function jsonToView(json:string) {
 }
 
 function getStatistic(dataItems: DataItem[]): Statistic {
-    let first=true;
-    let min: number=0;
-    let max: number=0;
-    let sum: number=0;
-    let last: number=0;
+    let first = true;
+    let min: number = 0;
+    let max: number = 0;
+    let sum: number = 0;
+    let last: number = 0;
     let count = 0;
 
     if (dataItems.length === 0) {
@@ -51,7 +51,7 @@ function getStatistic(dataItems: DataItem[]): Statistic {
             min = value.value;
             max = value.value;
             sum = value.value;
-            first=false;
+            first = false;
         } else {
             if (value.value < min) {
                 min = value.value;

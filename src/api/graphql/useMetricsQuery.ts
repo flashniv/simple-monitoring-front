@@ -14,12 +14,12 @@ const REQUEST = gql`
     }
 `;
 
-export default function useMetricsQuery(orgId:string) {
-    return useQuery<MetricsQueryResponse>(REQUEST,{
-        variables:{
-            orgId:orgId,
-            page:0,
-            size:8000
+export default function useMetricsQuery(orgId: string) {
+    return useQuery<MetricsQueryResponse>(REQUEST, {
+        variables: {
+            orgId: orgId,
+            page: 0,
+            size: 8000
         }
     });
 }

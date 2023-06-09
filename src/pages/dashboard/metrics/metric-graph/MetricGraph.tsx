@@ -90,7 +90,7 @@ type MetricGraphProps = {
 export default function MetricGraph({metric}: MetricGraphProps) {
     return (
         <Box
-            sx={{backgroundColor: "white",mb:2}}
+            sx={{backgroundColor: "white", mb: 2}}
         >
             <ReactApexChart
                 options={options}

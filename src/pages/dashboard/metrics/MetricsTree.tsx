@@ -88,7 +88,7 @@ export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics
                     height: "100vh"
                 }}
             >
-                <Box sx={{display:"flex",alignItems:"center"}}>
+                <Box sx={{display: "flex", alignItems: "center"}}>
                     <Typography textAlign={"center"} fontWeight={"bold"} width={"100%"}>Metrics</Typography>
                     <IconButton onClick={refreshMetrics}>
                         <SyncIcon/>

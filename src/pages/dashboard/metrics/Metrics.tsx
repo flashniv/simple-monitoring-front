@@ -9,7 +9,7 @@ type MetricsProps = {
     setAlert: React.Dispatch<React.SetStateAction<any>>;
 }
 export default function Metrics({orgId, setAlert}: MetricsProps) {
-    const {data, error, loading,refetch} = useMetricsQuery(orgId);
+    const {data, error, loading, refetch} = useMetricsQuery(orgId);
     const [selectedMetric, setSelectedMetric] = useState<number | undefined>(undefined);
 
     if (error) {
@@ -36,7 +36,8 @@ export default function Metrics({orgId, setAlert}: MetricsProps) {
     return (
         <Grid container columns={{xs: 3, sm: 3, md: 12, lg: 12}} spacing={2} pl={2} pr={2} pb={2} pt={3}>
             {data?.metrics !== undefined
-                ? <MetricsTree metrics={data?.metrics} setSelectedMetrics={setSelectedMetric} refreshMetrics={()=>refetch({orgId})}/>
+                ? <MetricsTree metrics={data?.metrics} setSelectedMetrics={setSelectedMetric}
+                               refreshMetrics={() => refetch({orgId})}/>
                 : <></>
             }
             {selectedMetric === undefined

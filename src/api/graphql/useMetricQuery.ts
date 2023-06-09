@@ -22,9 +22,9 @@ const REQUEST = gql`
     }
 `;
 
-export default function useMetricQuery(metricId:number,beginDiff:number,endDiff:number) {
-    return useQuery<MetricQueryResponse>(REQUEST,{
-        variables:{
+export default function useMetricQuery(metricId: number, beginDiff: number, endDiff: number) {
+    return useQuery<MetricQueryResponse>(REQUEST, {
+        variables: {
             metricId,
             beginDiff,
             endDiff

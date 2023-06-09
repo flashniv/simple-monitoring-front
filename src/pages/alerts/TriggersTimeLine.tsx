@@ -1,6 +1,6 @@
 import React from 'react';
 import {Trigger, TriggerStatus} from "../../types/Trigger";
-import {Grid, Tooltip} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Grid, Typography} from "@mui/material";
 
 function getTimeAgo(inputDate: string) {
     const startDate = new Date(inputDate)
@@ -34,14 +34,18 @@ function getTimeAgo(inputDate: string) {
 }
 
 const okTrigger = {
-    p: 1,
-    borderBottom: "1px solid gray",
-    backgroundColor: "lightgreen"
+    mr: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 24,
+    backgroundColor: "#10bd10"
 }
 const errTrigger = {
-    p: 1,
-    borderBottom: "1px solid gray",
-    backgroundColor: "lightpink"
+    mr: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 24,
+    backgroundColor: "red"
 }
 const failedTrigger = {
     borderBottom: "1px solid gray",
@@ -76,21 +80,44 @@ function getStyle(status: TriggerStatus) {
 
 export default function TriggersTimeLine({triggers}: TriggersTimeLineProps) {
     return (
-        <Grid container>
+
+        <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}}>
             {triggers.sort(dateSort).map(value =>
-                <>
-                    <Tooltip title={new Date(value.lastStatusUpdate).toLocaleString()} placement="top">
-                        <Grid item xs={2} sx={getStyle(value.lastStatus)}>
-                            {getTimeAgo(value.lastStatusUpdate)}
-                        </Grid>
-                    </Tooltip>
-                    <Grid item xs={1} sx={getStyle(value.lastStatus)}>
-                        {value.lastStatus}
-                    </Grid>
-                    <Grid item xs={9} sx={getStyle(value.lastStatus)}>
-                        {value.name}
-                    </Grid>
-                </>
+                <Grid xs={3}>
+                    <Box p={1}>
+                        <Card
+                            sx={
+                                value.lastStatus.toLocaleString().localeCompare("OK") === 0
+                                    ? {backgroundColor: "#d5ffce"}
+                                    : {backgroundColor: "#ffcece"}
+                            }
+                        >
+                            <CardContent>
+                                <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                        {getTimeAgo(value.lastStatusUpdate)}
+                                    </Typography>
+                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                        {new Date(value.lastStatusUpdate).toLocaleString()}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{display: "flex", alignItems: "center"}}>
+                                    <Box sx={getStyle(value.lastStatus)}/>
+                                    <Typography variant="h6" component="div">
+                                        {value.lastStatus}
+                                    </Typography>
+                                </Box>
+                                <Typography sx={{mb: 1.5, minHeight: 70, wordBreak: "break-all"}}
+                                            color="text.secondary">
+                                    {value.name}
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    </Box>
+                </Grid>
             )}
         </Grid>
     );

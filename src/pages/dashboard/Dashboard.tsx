@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {styled} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -15,7 +15,7 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import {CircularProgress, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {Avatar, CircularProgress, FormControl, InputLabel, Menu, MenuItem, Select} from "@mui/material";
 import useOrganizationsQuery from "../../api/graphql/useOrganizationsQuery";
 import Summary from "./summary/Summary";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -26,6 +26,10 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import Metrics from "./metrics/Metrics";
 import Alerts from "../alerts/Alerts";
+import {useNavigate} from "react-router-dom";
+import {pink} from "@mui/material/colors";
+import {Person} from "@mui/icons-material";
+import Button from "@mui/material/Button";
 
 function Copyright(props: any) {
     return (
@@ -99,6 +103,11 @@ export default function Dashboard({setAlert}: DashboardProps) {
     const organizationsQuery = useOrganizationsQuery();
     const [selectedOrg, setSelectedOrg] = React.useState("");
     const [currentPage, setCurrentPage] = React.useState(1);
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("accessToken") !== null);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const openProfileMenu = Boolean(anchorEl);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (!organizationsQuery.loading && organizationsQuery.data && organizationsQuery.data.organizations && organizationsQuery.data.organizations.length > 0) {
@@ -110,6 +119,12 @@ export default function Dashboard({setAlert}: DashboardProps) {
     function isLoading() {
         if (organizationsQuery.loading) return true;
         return false;
+    }
+
+    function logout() {
+        setAnchorEl(null);
+        localStorage.removeItem("accessToken");
+        navigate("/sign-in");
     }
 
     return (
@@ -162,6 +177,27 @@ export default function Dashboard({setAlert}: DashboardProps) {
                             <NotificationsIcon/>
                         </Badge>
                     </IconButton>
+                    {loggedIn
+                        ? <>
+                            <Avatar sx={{bgcolor: pink[500],ml:2}} onClick={event => setAnchorEl(event.currentTarget)}>
+                                <Person/>
+                            </Avatar>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={openProfileMenu}
+                                onClose={()=>setAnchorEl(null)}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem onClick={logout}>Logout</MenuItem>
+                            </Menu>
+                        </>
+                        : <Button variant="outlined" sx={{color:"inherit",ml:2}} size="small" onClick={() => navigate("/sign-in")}>
+                            Sign in
+                        </Button>
+                    }
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>

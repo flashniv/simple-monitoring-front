@@ -25,7 +25,7 @@ import ListItemText from "@mui/material/ListItemText";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import Metrics from "./metrics/Metrics";
-import Alerts from "../alerts/Alerts";
+import Triggers from "../triggers/Triggers";
 import {useNavigate} from "react-router-dom";
 import {pink} from "@mui/material/colors";
 import {Person} from "@mui/icons-material";
@@ -99,7 +99,7 @@ type DashboardProps = {
 }
 
 export default function Dashboard({setAlert}: DashboardProps) {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const organizationsQuery = useOrganizationsQuery();
     const [selectedOrg, setSelectedOrg] = React.useState("");
     const [currentPage, setCurrentPage] = React.useState(1);
@@ -231,7 +231,7 @@ export default function Dashboard({setAlert}: DashboardProps) {
                         <ListItemIcon>
                             <LayersIcon/>
                         </ListItemIcon>
-                        <ListItemText primary="Alerts"/>
+                        <ListItemText primary="Triggers"/>
                     </ListItemButton>
                 </List>
             </Drawer>
@@ -250,7 +250,7 @@ export default function Dashboard({setAlert}: DashboardProps) {
                 <Toolbar/>
                 {currentPage === 1 ? <Summary/> : <></>}
                 {currentPage === 2 ? <Metrics setAlert={setAlert} orgId={selectedOrg}/> : <></>}
-                {currentPage === 3 ? <Alerts setAlert={setAlert} orgId={selectedOrg}/> : <></>}
+                {currentPage === 3 ? <Triggers setAlert={setAlert} orgId={selectedOrg}/> : <></>}
                 <Copyright sx={{pt: 4}}/>
             </Box>
         </Box>

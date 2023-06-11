@@ -1,6 +1,33 @@
 import React from 'react';
 import {Trigger, TriggerStatus} from "../../types/Trigger";
-import {Box, Button, Grid} from "@mui/material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Button,
+    Checkbox,
+    Grid,
+    Modal,
+    TextField,
+    Typography
+} from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Alerts from "./Alerts";
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: {xs: 400, sm: 800, lg: 1200},
+    maxHeight:"100vh",
+    overflowY:"auto",
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 1,
+};
 
 function getTimeAgo(inputDate: string) {
     const startDate = new Date(inputDate)
@@ -77,27 +104,89 @@ type TriggerProps = {
     trigger: Trigger;
 }
 export default function TriggerItem({trigger}: TriggerProps) {
+    const [open, setOpen] = React.useState(false);
     return (
-        <Grid
-            container
-            columns={{xs: 1, sm: 1, md: 12, lg: 12}}
-            p={1}
-            sx={getStyle(trigger.lastStatus)}
-        >
-            <Grid item xs={2} display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-                <Box>{getTimeAgo(trigger.lastStatusUpdate)}</Box>
-                <Box
-                    sx={{
-                        pr: {xs: 0, md: 2}
-                    }}
-                >{trigger.lastStatus}</Box>
+        <>
+            <Grid
+                container
+                columns={{xs: 1, sm: 1, md: 12, lg: 12}}
+                p={1}
+                sx={getStyle(trigger.lastStatus)}
+            >
+                <Grid item xs={2} display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+                    <Box>{getTimeAgo(trigger.lastStatusUpdate)}</Box>
+                    <Box sx={{pr: {xs: 0, md: 2}}}>
+                        {trigger.lastStatus}
+                    </Box>
+                </Grid>
+                <Grid item xs={9} sx={{wordBreak: "break-word"}}>
+                    {trigger.name}
+                </Grid>
+                <Grid item xs={1} display={"flex"} justifyContent={"right"}>
+                    <Button size="small" onClick={() => setOpen(true)}>Details</Button>
+                </Grid>
             </Grid>
-            <Grid item xs={9} sx={{wordBreak:"break-word"}}>
-                {trigger.name}
-            </Grid>
-            <Grid item xs={1} display={"flex"} justifyContent={"right"}>
-                <Button size="small">Details</Button>
-            </Grid>
-        </Grid>
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}} spacing={2} sx={style}>
+                    <Grid item xs={12}>
+                        <TextField
+                            label={"Name"}
+                            fullWidth
+                            value={trigger.name}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        Current status: {trigger.lastStatus}
+                    </Grid>
+                    <Grid item xs={3}>
+                        Last change: {new Date(trigger.lastStatusUpdate).toLocaleString()}
+                    </Grid>
+                    <Grid item xs={3}>
+                        Enabled
+                        <Checkbox
+                            checked={trigger.enabled}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        Muted
+                        <Checkbox
+                            checked={trigger.muted}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label={"Conf"}
+                            fullWidth
+                            multiline
+                            maxRows={10}
+                            value={trigger.conf}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Alerts</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Alerts alerts={trigger.alerts}/>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Grid>
+                    <Grid item xs={12} display={"flex"} justifyContent={"right"}>
+                        <Button variant={"outlined"} sx={{mr: 2}}>Save</Button>
+                        <Button variant={"outlined"} sx={{mr: 2}} onClick={() => setOpen(false)}>cancel</Button>
+                    </Grid>
+                </Grid>
+            </Modal>
+        </>
     );
 }

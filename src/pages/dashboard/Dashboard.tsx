@@ -30,6 +30,7 @@ import {useNavigate} from "react-router-dom";
 import {pink} from "@mui/material/colors";
 import {Person} from "@mui/icons-material";
 import Button from "@mui/material/Button";
+import Configuration from "./configuration/Configuration";
 
 function Copyright(props: any) {
     return (
@@ -179,14 +180,15 @@ export default function Dashboard({setAlert}: DashboardProps) {
                     </IconButton>
                     {loggedIn
                         ? <>
-                            <Avatar sx={{bgcolor: pink[500],ml:2}} onClick={event => setAnchorEl(event.currentTarget)}>
+                            <Avatar sx={{bgcolor: pink[500], ml: 2}}
+                                    onClick={event => setAnchorEl(event.currentTarget)}>
                                 <Person/>
                             </Avatar>
                             <Menu
                                 id="basic-menu"
                                 anchorEl={anchorEl}
                                 open={openProfileMenu}
-                                onClose={()=>setAnchorEl(null)}
+                                onClose={() => setAnchorEl(null)}
                                 MenuListProps={{
                                     'aria-labelledby': 'basic-button',
                                 }}
@@ -194,7 +196,8 @@ export default function Dashboard({setAlert}: DashboardProps) {
                                 <MenuItem onClick={logout}>Logout</MenuItem>
                             </Menu>
                         </>
-                        : <Button variant="outlined" sx={{color:"inherit",ml:2}} size="small" onClick={() => navigate("/sign-in")}>
+                        : <Button variant="outlined" sx={{color: "inherit", ml: 2}} size="small"
+                                  onClick={() => navigate("/sign-in")}>
                             Sign in
                         </Button>
                     }
@@ -233,6 +236,13 @@ export default function Dashboard({setAlert}: DashboardProps) {
                         </ListItemIcon>
                         <ListItemText primary="Triggers"/>
                     </ListItemButton>
+                    <Divider/>
+                    <ListItemButton onClick={() => setCurrentPage(4)}>
+                        <ListItemIcon>
+                            <DashboardIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Configuration"/>
+                    </ListItemButton>
                 </List>
             </Drawer>
             <Box
@@ -251,6 +261,7 @@ export default function Dashboard({setAlert}: DashboardProps) {
                 {currentPage === 1 ? <Summary/> : <></>}
                 {currentPage === 2 ? <Metrics setAlert={setAlert} orgId={selectedOrg}/> : <></>}
                 {currentPage === 3 ? <Triggers setAlert={setAlert} orgId={selectedOrg}/> : <></>}
+                {currentPage === 4 && organizationsQuery.data?.organizations!==undefined ? <Configuration organizations={organizationsQuery.data?.organizations}/> : <></>}
                 <Copyright sx={{pt: 4}}/>
             </Box>
         </Box>

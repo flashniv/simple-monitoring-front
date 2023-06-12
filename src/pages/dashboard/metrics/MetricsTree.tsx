@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import {Metric} from "../../../types/Metric";
-import {Box, Grid, IconButton, Paper, Typography} from "@mui/material";
+import {Box, Grid, IconButton, Paper, TextField, Typography} from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
 
 type TreeJsonItem = {
@@ -23,6 +23,7 @@ type MetricsTreeProps = {
 }
 
 export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics}: MetricsTreeProps) {
+    const [filter,setFilter]=useState("");
     const [treeItems, setTreeItems] = useState<TreeJsonItem>({
         id: 0,
         metricId: 0,
@@ -46,7 +47,7 @@ export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics
             path: "",
             childs: {}
         }
-        metrics.map((metric) => {
+        metrics.filter(value => value.name.includes(filter)).map((metric) => {
             let head = newItems
             metric.name.split('.').map((part, index) => {
                 if (!head.childs.hasOwnProperty(part)) {
@@ -62,7 +63,7 @@ export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics
             })
         })
         setTreeItems(newItems)
-    }, [metrics]);
+    }, [metrics,filter]);
 
     const renderTree = (nodes: TreeJsonItem) => (
         <TreeItem
@@ -88,8 +89,15 @@ export default function MetricsTree({metrics, setSelectedMetrics, refreshMetrics
                     height: "100vh"
                 }}
             >
-                <Box sx={{display: "flex", alignItems: "center"}}>
-                    <Typography textAlign={"center"} fontWeight={"bold"} width={"100%"}>Metrics</Typography>
+                <Typography textAlign={"center"} fontWeight={"bold"} width={"100%"}>Metrics</Typography>
+                <Box sx={{display: "flex", alignItems: "center", mb:1}}>
+                    <TextField
+                        label={"search"}
+                        variant={"standard"}
+                        fullWidth
+                        value={filter}
+                        onChange={event => setFilter(event.target.value)}
+                    />
                     <IconButton onClick={refreshMetrics}>
                         <SyncIcon/>
                     </IconButton>

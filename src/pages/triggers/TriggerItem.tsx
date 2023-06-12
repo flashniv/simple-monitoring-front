@@ -66,28 +66,28 @@ const okTrigger = {
     display: "flex",
     alignItems: "center",
     border: "1px solid gray",
-    mb: 1,
+    mb: {xs: 1, md: 0},
     backgroundColor: "lightgreen"
 }
 const errTrigger = {
     display: "flex",
     alignItems: "center",
     border: "1px solid gray",
-    mb: 1,
+    mb: {xs: 1, md: 0},
     backgroundColor: "lightpink"
 }
 const failedTrigger = {
     display: "flex",
     alignItems: "center",
     border: "1px solid gray",
-    mb: 1,
+    mb: {xs: 1, md: 0},
     backgroundColor: "red"
 }
 const uncheckedTrigger = {
     display: "flex",
     alignItems: "center",
     border: "1px solid gray",
-    mb: 1,
+    mb: {xs: 1, md: 0},
     backgroundColor: "gray"
 }
 

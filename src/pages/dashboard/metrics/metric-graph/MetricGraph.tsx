@@ -80,7 +80,6 @@ function metricToSeries(metric: Metric): ApexAxisChartSeries {
         });
         series.push(dataLine);
     });
-    console.log(series);
     return series;
 }
 

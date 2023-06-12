@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert} from "../../types/Alert";
-import {Grid} from "@mui/material";
+import {Grid, Tooltip} from "@mui/material";
 
 function getTimeAgo(inputDate: string) {
     const startDate = new Date(inputDate)
@@ -33,14 +33,48 @@ function getTimeAgo(inputDate: string) {
     return "too old"
 }
 
-function AlertItem(alert: Alert) {
+function getDuration(time: number) {
+    if (time < 60) {
+        return "(" + Math.trunc(time) + "s)";
+    }
+    if (time < 3600) {
+        return "(" + Math.trunc(time / 60) + "m)";
+    }
+    if (time < 86400) {
+        return "(" + Math.trunc(time / 3600) + "h)";
+    }
+    return "(" + Math.trunc(time / 86400) + "d)";
+}
+
+const okAlert = {
+    p: 1,
+    borderBottom: "1px solid gray",
+    backgroundColor: "lightgreen"
+}
+const errAlert = {
+    p: 1,
+    borderBottom: "1px solid gray",
+    backgroundColor: "lightpink"
+}
+
+function AlertItem({alert, index, array}: { alert: Alert, index: number, array: Alert[] }) {
+    let delay = "";
+    let nextTimestamp=new Date().getTime();
+    if (index > 0) {
+        nextTimestamp = new Date(array[index - 1].alertTimestamp).getTime();
+    }
+    const currentTimestamp = new Date(alert.alertTimestamp).getTime();
+    delay = getDuration((nextTimestamp - currentTimestamp) / 1000);
+
     return (
         <Grid container columns={{xs: 6, sm: 6, md: 12, lg: 12}}>
-            <Grid item xs={3}>
-                {getTimeAgo(alert.alertTimestamp)}
+            <Grid item xs={3} sx={alert.triggerStatus.toLocaleString().localeCompare("OK") === 0 ? okAlert : errAlert}>
+                <Tooltip title={new Date(alert.alertTimestamp).toLocaleString()}>
+                    <span>{getTimeAgo(alert.alertTimestamp)}</span>
+                </Tooltip>
             </Grid>
-            <Grid item xs={3}>
-                {alert.triggerStatus}
+            <Grid item xs={3} sx={alert.triggerStatus.toLocaleString().localeCompare("OK") === 0 ? okAlert : errAlert}>
+                {alert.triggerStatus} {delay}
             </Grid>
 
         </Grid>
@@ -51,15 +85,10 @@ type AlertsProps = {
     alerts: Alert[];
 }
 export default function Alerts({alerts}: AlertsProps) {
-    alerts.map(value => {
-        console.log(value.alertTimestamp);
-    })
     return (
         <>
-            {alerts.map(value =>
-                <AlertItem id={value.id} trigger={value.trigger} organization={value.organization}
-                       triggerStatus={value.triggerStatus} alertTimestamp={value.alertTimestamp}
-                       operationData={value.operationData}/>
+            {alerts.map((value, index, array) =>
+                <AlertItem key={value.id} alert={value} index={index} array={array}/>
             )}
         </>
     );

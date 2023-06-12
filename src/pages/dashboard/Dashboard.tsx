@@ -261,7 +261,11 @@ export default function Dashboard({setAlert}: DashboardProps) {
                 {currentPage === 1 ? <Summary/> : <></>}
                 {currentPage === 2 ? <Metrics setAlert={setAlert} orgId={selectedOrg}/> : <></>}
                 {currentPage === 3 ? <Triggers setAlert={setAlert} orgId={selectedOrg}/> : <></>}
-                {currentPage === 4 && organizationsQuery.data?.organizations!==undefined ? <Configuration organizations={organizationsQuery.data?.organizations}/> : <></>}
+                {currentPage === 4 && organizationsQuery.data?.organizations !== undefined
+                    ? <Configuration organizations={organizationsQuery.data?.organizations}
+                                     refetchOrgs={organizationsQuery.refetch}/>
+                    : <></>
+                }
                 <Copyright sx={{pt: 4}}/>
             </Box>
         </Box>

@@ -2,30 +2,21 @@ import React, {useState} from 'react';
 import {Box, Button, Grid, Typography} from "@mui/material";
 import {Organization} from "../../../types/Organization";
 import OrganizationConfiguration from "./OrganizationConfiguration";
+import OrganizationsConfiguration from "./OrganizationsConfiguration";
+import {ApolloQueryResult, OperationVariables} from "@apollo/client";
+import {OrganizationsQueryResponse} from "../../../api/graphql/useOrganizationsQuery";
 
 type ConfigurationProps = {
-    organizations: Organization[]
+    organizations: Organization[],
+    refetchOrgs: (variables?: Partial<OperationVariables>) => Promise<ApolloQueryResult<OrganizationsQueryResponse>>
 }
 
-export default function Configuration({organizations}: ConfigurationProps) {
+export default function Configuration({organizations,refetchOrgs}: ConfigurationProps) {
     const [currentOrg, setCurrentOrg] = useState<Organization | undefined>();
 
     return (
         <Grid container m={2}>
-            <Grid item xs={3} sx={{backgroundColor: "white", minHeight: 900}} p={1}>
-                <Typography variant={"h5"} textAlign={"center"} p={2}>
-                    Organizations
-                </Typography>
-                <Box display={"flex"} justifyContent={"space-between"}>
-                    <Button fullWidth variant={"outlined"}>Add</Button>
-                </Box>
-                {organizations.map(value =>
-                    <Box display={"flex"} justifyContent={"space-between"} borderBottom={"1px solid gray"}>
-                        <Box display={"flex"} alignItems={"center"}>{value.name}</Box>
-                        <Button onClick={() => setCurrentOrg(value)}>Details</Button>
-                    </Box>
-                )}
-            </Grid>
+            <OrganizationsConfiguration organizations={organizations} setCurrentOrg={setCurrentOrg} refetchOrgs={refetchOrgs}/>
             <Grid item xs={9} pl={1} pr={3}>
                 {currentOrg === undefined
                     ? <Box sx={{

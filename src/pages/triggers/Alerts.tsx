@@ -35,7 +35,7 @@ function getTimeAgo(inputDate: string) {
 
 function AlertItem(alert: Alert) {
     return (
-        <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}}>
+        <Grid container columns={{xs: 6, sm: 6, md: 12, lg: 12}}>
             <Grid item xs={3}>
                 {getTimeAgo(alert.alertTimestamp)}
             </Grid>

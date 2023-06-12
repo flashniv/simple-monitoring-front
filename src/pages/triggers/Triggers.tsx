@@ -64,7 +64,7 @@ export default function Triggers({orgId, setAlert}: AlertsProps) {
             </Grid>
             {data?.triggers !== undefined
                 ? <>{[...data?.triggers].filter(filterFunc).sort(dateSort).map(value =>
-                    <TriggerItem key={value.id} trigger={value}/>
+                    <TriggerItem key={value.id} triggerRO={value}/>
                 )}</>
                 : <>Error</>
             }

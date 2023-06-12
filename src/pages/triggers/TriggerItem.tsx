@@ -1,5 +1,5 @@
 import React from 'react';
-import {Trigger, TriggerStatus} from "../../types/Trigger";
+import {Trigger, TriggerPriority, TriggerStatus} from "../../types/Trigger";
 import {
     Accordion,
     AccordionDetails,
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Alerts from "./Alerts";
+import {ITrigger, useTriggerMutation} from "../../api/graphql/useTriggersQuery";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -21,12 +22,13 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: {xs: 400, sm: 800, lg: 1200},
-    maxHeight:"100vh",
-    overflowY:"auto",
+    maxHeight: "100vh",
+    overflowY: "auto",
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
-    p: 1,
+    pr: 2,
+    pb: 2
 };
 
 function getTimeAgo(inputDate: string) {
@@ -101,10 +103,34 @@ function getStyle(status: TriggerStatus) {
 }
 
 type TriggerProps = {
-    trigger: Trigger;
+    triggerRO: Trigger;
 }
-export default function TriggerItem({trigger}: TriggerProps) {
+export default function TriggerItem({triggerRO}: TriggerProps) {
+    const [modified, setModified] = React.useState(false);
+    const [trigger,setTrigger] = React.useState<Trigger>(triggerRO);
     const [open, setOpen] = React.useState(false);
+    const [updateTrigger, { data, loading, error }] = useTriggerMutation();
+
+    function saveTrigger() {
+        const inputTrigger:ITrigger={
+            triggerId:trigger.triggerId,
+            enabled:trigger.enabled,
+            muted:trigger.muted,
+            description:trigger.description,
+            name:trigger.name,
+            conf:trigger.conf,
+            suppressedScore:trigger.suppressedScore,
+            organizationId:trigger.organization.id,
+            priority:trigger.priority
+        }
+        updateTrigger({
+            variables: {
+                triggerId: trigger.id,
+                inputTrigger: inputTrigger
+            }
+        });
+    }
+
     return (
         <>
             <Grid
@@ -138,24 +164,25 @@ export default function TriggerItem({trigger}: TriggerProps) {
                             label={"Name"}
                             fullWidth
                             value={trigger.name}
+                            onChange={event => {setModified(true); setTrigger({...trigger,name:event.target.value});}}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={3} display={"flex"} alignItems={"center"}>
                         Current status: {trigger.lastStatus}
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={3} display={"flex"} alignItems={"center"}>
                         Last change: {new Date(trigger.lastStatusUpdate).toLocaleString()}
                     </Grid>
                     <Grid item xs={3}>
                         Enabled
                         <Checkbox
                             checked={trigger.enabled}
+                            onChange={event => {setModified(true); setTrigger({...trigger,enabled:event.target.checked});}}
                         />
-                    </Grid>
-                    <Grid item xs={3}>
                         Muted
                         <Checkbox
                             checked={trigger.muted}
+                            onChange={event => {setModified(true); setTrigger({...trigger,muted:event.target.checked});}}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -165,12 +192,13 @@ export default function TriggerItem({trigger}: TriggerProps) {
                             multiline
                             maxRows={10}
                             value={trigger.conf}
+                            onChange={event => {setModified(true); setTrigger({...trigger,conf:event.target.value});}}
                         />
                     </Grid>
                     <Grid item xs={12}>
                         <Accordion>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={<ExpandMoreIcon/>}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
@@ -182,8 +210,8 @@ export default function TriggerItem({trigger}: TriggerProps) {
                         </Accordion>
                     </Grid>
                     <Grid item xs={12} display={"flex"} justifyContent={"right"}>
-                        <Button variant={"outlined"} sx={{mr: 2}}>Save</Button>
-                        <Button variant={"outlined"} sx={{mr: 2}} onClick={() => setOpen(false)}>cancel</Button>
+                        <Button variant={"outlined"} sx={{mr: 2}} disabled={!modified} onClick={saveTrigger}>Save</Button>
+                        <Button variant={"outlined"} onClick={() => setOpen(false)}>cancel</Button>
                     </Grid>
                 </Grid>
             </Modal>

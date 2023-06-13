@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import useTriggersQuery from "../../api/graphql/useTriggersQuery";
-import {Box, Checkbox, Grid, Skeleton, TextField} from "@mui/material";
+import {Box, Checkbox, Grid, IconButton, Skeleton, TextField} from "@mui/material";
 import {Trigger} from "../../types/Trigger";
 import TriggerItem from "./TriggerItem";
+import SyncIcon from "@mui/icons-material/Sync";
 
 type AlertsProps = {
     orgId: string;
@@ -54,12 +55,17 @@ export default function Triggers({orgId, setAlert}: AlertsProps) {
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={6} sx={{display: "flex", alignItems: "center"}}>
-                    Only alerted
-                    <Checkbox
-                        value={onlyAlerted}
-                        onChange={event => setOnlyAlerted(event.target.checked)}
-                    />
+                <Grid item xs={6} sx={{display: "flex", alignItems: "center"}} display={"flex"} justifyContent={"space-between"}>
+                    <Box>
+                        Only alerted
+                        <Checkbox
+                            value={onlyAlerted}
+                            onChange={event => setOnlyAlerted(event.target.checked)}
+                        />
+                    </Box>
+                    <IconButton onClick={()=>refetch({orgId: orgId,page: 0,size: 8000})}>
+                        <SyncIcon />
+                    </IconButton>
                 </Grid>
             </Grid>
             {data?.triggers !== undefined

@@ -129,6 +129,8 @@ export default function TriggerItem({triggerRO}: TriggerProps) {
                 inputTrigger: inputTrigger
             }
         });
+        setModified(false);
+        setOpen(false);
     }
 
     return (

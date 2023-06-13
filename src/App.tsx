@@ -18,7 +18,7 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         <Route path={"/"} element={<Index/>}/>
-                        <Route path={"/sign-in"} element={<SignIn setAlert={setAlert}/>}/>
+                        <Route path={"/sign-in"} element={<SignIn />}/>
                         <Route path={"/dashboard"} element={<Dashboard setAlert={setAlert}/>}/>
                     </Routes>
                 </BrowserRouter>

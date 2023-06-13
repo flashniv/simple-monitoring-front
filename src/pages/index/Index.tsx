@@ -13,7 +13,7 @@ import Sidebar from './blog/Sidebar';
 import Footer from './blog/Footer';
 
 const sections = [
-    {title: 'Technology', url: '#'},
+    {title: 'Dashboard', url: '/dashboard'},
     {title: 'Design', url: '#'},
     {title: 'Culture', url: '#'},
     {title: 'Business', url: '#'},

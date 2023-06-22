@@ -5,6 +5,14 @@ export interface AlertersQueryResponse {
     alerters: Alerter[];
 }
 
+export interface IAlerter {
+    organizationId: string;
+    minPriority: string;
+    description: string;
+    className: string;
+    properties: string;
+}
+
 export interface AlerterQueryResponse {
     alerter: Alerter;
 }
@@ -25,23 +33,22 @@ const REQUEST = gql`
     }
 `;
 
-// const MUTATION = gql`
-//     mutation AddOrganizationMutation($name:String!){
-//         createOrganization(name:$name){
-//             id
-//             name
-//         }
-//     }
-// `
+const MUTATION = gql`
+    mutation AddAlerterMutation($inputAlerter:IAlerter!){
+        createAlerter(inputAlerter:$inputAlerter){
+            id
+        }
+    }
+`
 
 export default function useAlertersQuery(orgId: string) {
-    return useQuery<AlertersQueryResponse>(REQUEST,{
-        variables:{
-            orgId:orgId
+    return useQuery<AlertersQueryResponse>(REQUEST, {
+        variables: {
+            orgId: orgId
         }
     });
 }
 
-// export function useOrganizationAddMutation() {
-//     return useMutation<OrganizationQueryResponse>(MUTATION);
-// }
+export function useAddAlerterMutation() {
+    return useMutation<AlerterQueryResponse>(MUTATION);
+}

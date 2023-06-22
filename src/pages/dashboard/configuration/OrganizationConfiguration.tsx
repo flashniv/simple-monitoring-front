@@ -2,6 +2,7 @@ import React from 'react';
 import {Organization} from "../../../types/Organization";
 import useOrganizationAccessToken, {useCreateOrganizationAccessToken} from "../../../api/graphql/useOrganizationAccessToken";
 import {Box, Button, Grid, Skeleton, Typography} from "@mui/material";
+import Alerters from "./Alerters";
 
 type OrganizationConfigurationProps = {
     organization: Organization;
@@ -10,7 +11,7 @@ type OrganizationConfigurationProps = {
 export default function OrganizationConfiguration({organization}: OrganizationConfigurationProps) {
     const {data, loading, error, refetch} = useOrganizationAccessToken(organization.id);
     const [addAccessToken, addAccessTokenProps] = useCreateOrganizationAccessToken();
-
+    console.log(organization);
     if (loading) {
         return (
             <Skeleton variant="rectangular" height={900}/>
@@ -43,25 +44,28 @@ export default function OrganizationConfiguration({organization}: OrganizationCo
             <Typography variant={"h5"} textAlign={"center"} p={2}>
                 Organization: {organization.name}
             </Typography>
-            <Grid container>
-                <Grid item xs={3}>
-                    <Typography variant={"h6"} textAlign={"center"} p={2}>
-                        Access tokens
-                    </Typography>
-                    <Box display={"flex"} justifyContent={"space-between"}>
-                        <Button fullWidth variant={"outlined"}
-                                disabled={addAccessTokenProps.loading}
-                                onClick={clickAddAccessToken}>Add</Button>
+            <Grid container spacing={1}>
+                <Grid item xs={3} p={1}>
+                    <Box  border={"1px solid gray"} p={1}>
+                        <Typography variant={"h6"} textAlign={"center"} p={2}>
+                            Access tokens
+                        </Typography>
+                        <Box display={"flex"} justifyContent={"space-between"}>
+                            <Button fullWidth variant={"outlined"}
+                                    disabled={addAccessTokenProps.loading}
+                                    onClick={clickAddAccessToken}>Add</Button>
+                        </Box>
+                        {data?.organizationAccessTokens !== undefined
+                            ? data?.organizationAccessTokens.map(value =>
+                                <Box key={value.id} p={1} borderBottom={"1px solid gray"}>
+                                    {value.id}
+                                </Box>
+                            )
+                            : <></>
+                        }
                     </Box>
-                    {data?.organizationAccessTokens !== undefined
-                        ? data?.organizationAccessTokens.map(value =>
-                            <Box key={value.id} p={1} borderBottom={"1px solid gray"}>
-                                {value.id}
-                            </Box>
-                        )
-                        : <></>
-                    }
                 </Grid>
+                <Alerters orgId={organization.id}/>
             </Grid>
         </Box>
     );

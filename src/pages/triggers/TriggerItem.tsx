@@ -1,5 +1,5 @@
 import React from 'react';
-import {Trigger, TriggerPriority, TriggerStatus} from "../../types/Trigger";
+import {Trigger, TriggerStatus} from "../../types/Trigger";
 import {
     Accordion,
     AccordionDetails,
@@ -102,26 +102,27 @@ function getStyle(status: TriggerStatus) {
     return uncheckedTrigger;
 }
 
-type TriggerProps = {
+type TriggerDetailsProps = {
     triggerRO: Trigger;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function TriggerItem({triggerRO}: TriggerProps) {
+function TriggerDetails({triggerRO,open,setOpen}:TriggerDetailsProps) {
     const [modified, setModified] = React.useState(false);
-    const [trigger,setTrigger] = React.useState<Trigger>(triggerRO);
-    const [open, setOpen] = React.useState(false);
-    const [updateTrigger, { data, loading, error }] = useTriggerMutation();
+    const [trigger, setTrigger] = React.useState<Trigger>(triggerRO);
+    const [updateTrigger, {data, loading, error}] = useTriggerMutation();
 
     function saveTrigger() {
-        const inputTrigger:ITrigger={
-            triggerId:trigger.triggerId,
-            enabled:trigger.enabled,
-            muted:trigger.muted,
-            description:trigger.description,
-            name:trigger.name,
-            conf:trigger.conf,
-            suppressedScore:trigger.suppressedScore,
-            organizationId:trigger.organization.id,
-            priority:trigger.priority
+        const inputTrigger: ITrigger = {
+            triggerId: trigger.triggerId,
+            enabled: trigger.enabled,
+            muted: trigger.muted,
+            description: trigger.description,
+            name: trigger.name,
+            conf: trigger.conf,
+            suppressedScore: trigger.suppressedScore,
+            organizationId: trigger.organization.id,
+            priority: trigger.priority
         }
         updateTrigger({
             variables: {
@@ -134,89 +135,112 @@ export default function TriggerItem({triggerRO}: TriggerProps) {
     }
 
     return (
+        <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}} spacing={2} sx={style}>
+                <Grid item xs={12}>
+                    <TextField
+                        label={"Name"}
+                        fullWidth
+                        value={trigger.name}
+                        onChange={event => {
+                            setModified(true);
+                            setTrigger({...trigger, name: event.target.value});
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={3} display={"flex"} alignItems={"center"}>
+                    Current status: {trigger.lastStatus}
+                </Grid>
+                <Grid item xs={3} display={"flex"} alignItems={"center"}>
+                    Last change: {new Date(trigger.lastStatusUpdate).toLocaleString()}
+                </Grid>
+                <Grid item xs={3}>
+                    Enabled
+                    <Checkbox
+                        checked={trigger.enabled}
+                        onChange={event => {
+                            setModified(true);
+                            setTrigger({...trigger, enabled: event.target.checked});
+                        }}
+                    />
+                    Muted
+                    <Checkbox
+                        checked={trigger.muted}
+                        onChange={event => {
+                            setModified(true);
+                            setTrigger({...trigger, muted: event.target.checked});
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        label={"Conf"}
+                        fullWidth
+                        multiline
+                        maxRows={10}
+                        value={trigger.conf}
+                        onChange={event => {
+                            setModified(true);
+                            setTrigger({...trigger, conf: event.target.value});
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>Alerts</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Alerts alerts={trigger.alerts}/>
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
+                <Grid item xs={12} display={"flex"} justifyContent={"right"}>
+                    <Button variant={"outlined"} sx={{mr: 2}} disabled={!modified} onClick={saveTrigger}>Save</Button>
+                    <Button variant={"outlined"} onClick={() => setOpen(false)}>cancel</Button>
+                </Grid>
+            </Grid>
+        </Modal>
+    );
+}
+
+type TriggerProps = {
+    triggerRO: Trigger;
+}
+export default function TriggerItem({triggerRO}: TriggerProps) {
+    const [open, setOpen] = React.useState(false);
+
+    return (
         <>
             <Grid
                 container
                 columns={{xs: 1, sm: 1, md: 12, lg: 12}}
                 p={1}
-                sx={getStyle(trigger.lastStatus)}
+                sx={getStyle(triggerRO.lastStatus)}
             >
                 <Grid item xs={2} display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-                    <Box>{getTimeAgo(trigger.lastStatusUpdate)}</Box>
+                    <Box>{getTimeAgo(triggerRO.lastStatusUpdate)}</Box>
                     <Box sx={{pr: {xs: 0, md: 2}}}>
-                        {trigger.lastStatus}
+                        {triggerRO.lastStatus}
                     </Box>
                 </Grid>
                 <Grid item xs={9} sx={{wordBreak: "break-word"}}>
-                    {trigger.name}
+                    {triggerRO.name}
                 </Grid>
                 <Grid item xs={1} display={"flex"} justifyContent={"right"}>
                     <Button size="small" onClick={() => setOpen(true)}>Details</Button>
                 </Grid>
             </Grid>
-            <Modal
-                open={open}
-                onClose={() => setOpen(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Grid container columns={{xs: 3, sm: 6, md: 12, lg: 12}} spacing={2} sx={style}>
-                    <Grid item xs={12}>
-                        <TextField
-                            label={"Name"}
-                            fullWidth
-                            value={trigger.name}
-                            onChange={event => {setModified(true); setTrigger({...trigger,name:event.target.value});}}
-                        />
-                    </Grid>
-                    <Grid item xs={3} display={"flex"} alignItems={"center"}>
-                        Current status: {trigger.lastStatus}
-                    </Grid>
-                    <Grid item xs={3} display={"flex"} alignItems={"center"}>
-                        Last change: {new Date(trigger.lastStatusUpdate).toLocaleString()}
-                    </Grid>
-                    <Grid item xs={3}>
-                        Enabled
-                        <Checkbox
-                            checked={trigger.enabled}
-                            onChange={event => {setModified(true); setTrigger({...trigger,enabled:event.target.checked});}}
-                        />
-                        Muted
-                        <Checkbox
-                            checked={trigger.muted}
-                            onChange={event => {setModified(true); setTrigger({...trigger,muted:event.target.checked});}}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            label={"Conf"}
-                            fullWidth
-                            multiline
-                            maxRows={10}
-                            value={trigger.conf}
-                            onChange={event => {setModified(true); setTrigger({...trigger,conf:event.target.value});}}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Alerts</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Alerts alerts={trigger.alerts}/>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Grid>
-                    <Grid item xs={12} display={"flex"} justifyContent={"right"}>
-                        <Button variant={"outlined"} sx={{mr: 2}} disabled={!modified} onClick={saveTrigger}>Save</Button>
-                        <Button variant={"outlined"} onClick={() => setOpen(false)}>cancel</Button>
-                    </Grid>
-                </Grid>
-            </Modal>
+            <TriggerDetails triggerRO={triggerRO} open={open} setOpen={setOpen}/>
         </>
     );
 }

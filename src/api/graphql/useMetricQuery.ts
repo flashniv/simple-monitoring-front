@@ -28,6 +28,7 @@ export default function useMetricQuery(metricId: number, beginDiff: number, endD
             metricId,
             beginDiff,
             endDiff
-        }
+        },
+        pollInterval: 60000
     });
 }

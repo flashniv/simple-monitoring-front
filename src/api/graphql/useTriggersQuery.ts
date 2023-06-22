@@ -73,7 +73,8 @@ export default function useTriggersQuery(orgId: string) {
             orgId: orgId,
             page: 0,
             size: 8000
-        }
+        },
+        pollInterval: 60000
     });
 }
 

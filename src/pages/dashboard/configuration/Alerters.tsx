@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import useAlertersQuery, {
-    AlerterQueryResponse, AlertersQueryResponse,
+    AlertersQueryResponse,
     IAlerter,
-    useAddAlerterMutation
+    useAddAlerterMutation,
+    useDelAlerterMutation,
+    useUpdateAlerterMutation
 } from "../../../api/graphql/useAlertersQuery";
-import {Box, Button, Grid, Modal, Skeleton, TextField, Typography} from "@mui/material";
+import {Avatar, Box, Button, Grid, IconButton, Modal, Skeleton, TextField, Typography} from "@mui/material";
 import {Alerter} from "../../../types/Alerter";
-import {TriggerPriority} from "../../../types/Trigger";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import {ApolloQueryResult, OperationVariables} from "@apollo/client";
 
 const style = {
@@ -21,24 +24,147 @@ const style = {
     p: 3,
 };
 
-type AlerterProps = {
+type EditTGDialogProps = {
     alerter: Alerter;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    orgId: string;
+    refreshAlerters: (variables?: Partial<OperationVariables>) => Promise<ApolloQueryResult<AlertersQueryResponse>>
 }
 
-function AlerterItem({alerter}: AlerterProps) {
+function EditTGDialog({alerter, open, setOpen, orgId, refreshAlerters}: EditTGDialogProps) {
+    const [desc, setDesc] = useState(alerter.description);
+    const properties: {
+        token: string;
+        chat_id: number;
+    } = JSON.parse(alerter.properties);
+    const [token, setToken] = useState(properties.token);
+    const [chatId, setChatId] = useState("" + properties.chat_id);
+    const [updateAlerter] = useUpdateAlerterMutation();
+
+    function saveTGAlerter() {
+        const props = "{\"token\":\"" + token + "\",\"chat_id\":\"" + chatId + "\"}";
+        const tgAlerter: IAlerter = {
+            organizationId: orgId,
+            className: "ua.com.serverhelp.simplemonitoring.service.alert.alerters.TelegramAlertSender",
+            properties: props,
+            description: desc,
+            minPriority: "INFO"
+        }
+        updateAlerter({
+            variables: {
+                alerterId: alerter.id,
+                inputAlerter: tgAlerter
+            }
+        })
+            .then(value =>
+                refreshAlerters({
+                    orgId: orgId
+                })
+            )
+            .catch(reason => {
+                console.error(reason)
+            });
+        setOpen(false);
+    }
+
+    function onCancel() {
+        setToken(properties.token);
+        setChatId("" + properties.chat_id);
+        setDesc(alerter.description);
+        setOpen(false);
+    }
+
+    return (
+        <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"} mb={2}>
+                    Edit Telegram alerter
+                </Typography>
+                <TextField
+                    fullWidth
+                    value={desc}
+                    onChange={event => setDesc(event.target.value)}
+                    label={"Description"}
+                    sx={{mb: 2}}
+                />
+                <TextField
+                    fullWidth
+                    value={token}
+                    onChange={event => setToken(event.target.value)}
+                    label={"Token"}
+                    sx={{mb: 2}}
+                />
+                <TextField
+                    fullWidth
+                    value={chatId}
+                    onChange={event => setChatId(event.target.value)}
+                    label={"Chat ID"}
+                />
+                <Box display={"flex"} justifyContent={"right"} pt={2}>
+                    <Button onClick={saveTGAlerter}>Ok</Button>
+                    <Button onClick={onCancel}>Cancel</Button>
+                </Box>
+            </Box>
+        </Modal>
+    );
+}
+
+
+type AlerterProps = {
+    alerter: Alerter;
+    refreshAlerters: (variables?: Partial<OperationVariables>) => Promise<ApolloQueryResult<AlertersQueryResponse>>;
+    orgId: string;
+}
+
+function AlerterItem({alerter, refreshAlerters, orgId}: AlerterProps) {
+    const [deleteAlerter] = useDelAlerterMutation();
+    const [showTGEditDialog, setShowTGEditDialog] = useState(false);
+
+    function deleteClk() {
+        if (window.confirm("Are you sure?")) {
+            deleteAlerter({
+                variables: {
+                    alerterId: alerter.id
+                }
+            }).then(value => refreshAlerters({
+                orgId: orgId
+            }));
+        }
+    }
+
     if (alerter.className.includes("alerters.TelegramAlertSender")) {
         const properties: {
             token: string;
             chat_id: number;
         } = JSON.parse(alerter.properties);
-        return (
-            <Box borderBottom={"1px solid lightgray"} p={1} pl={2} display={"flex"}>
-                <Box mr={2}>TG</Box>
-                <Box mr={2}>{alerter.minPriority}</Box>
-                <Box mr={2}>{alerter.description}</Box>
-                <Box mr={2}>Token: {properties.token}</Box>
-                <Box>Chat: {properties.chat_id}</Box>
-            </Box>
+        return (<>
+                <Box borderBottom={"1px solid lightgray"} p={1} pl={2} display={"flex"} justifyContent={"space-between"}
+                     alignItems={"center"}>
+                    <Avatar
+                        src={"/images/telegram.png"}
+                    />
+                    <Box mr={2}>{alerter.minPriority}</Box>
+                    <Box mr={2}>{alerter.description}</Box>
+                    <Box mr={2}>Token: {properties.token}</Box>
+                    <Box>Chat: {properties.chat_id}</Box>
+                    <Box>
+                        <IconButton onClick={() => setShowTGEditDialog(true)}>
+                            <EditNoteIcon/>
+                        </IconButton>
+                        <IconButton color={"error"} onClick={deleteClk}>
+                            <DeleteForeverIcon/>
+                        </IconButton>
+                    </Box>
+                </Box>
+                <EditTGDialog alerter={alerter} open={showTGEditDialog} setOpen={setShowTGEditDialog} orgId={orgId}
+                              refreshAlerters={refreshAlerters}/>
+            </>
         );
     }
     return (
@@ -176,7 +302,8 @@ export default function Alerters({orgId}: AlertersProps) {
                         setShowSlackDialog(true);
                     }}>Add Slack</Button>
                     {data?.alerters !== undefined
-                        ? data.alerters.map(value => <AlerterItem key={value.id} alerter={value}/>)
+                        ? data.alerters.map(value => <AlerterItem key={value.id} alerter={value}
+                                                                  refreshAlerters={refetch} orgId={orgId}/>)
                         : <>Error</>
                     }
                 </Box>

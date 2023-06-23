@@ -33,9 +33,21 @@ const REQUEST = gql`
     }
 `;
 
-const MUTATION = gql`
+const ADD_MUTATION = gql`
     mutation AddAlerterMutation($inputAlerter:IAlerter!){
         createAlerter(inputAlerter:$inputAlerter){
+            id
+        }
+    }
+`
+const DEL_MUTATION = gql`
+    mutation DelAlerterMutation($alerterId:ID!){
+        deleteAlerter(alerterId:$alerterId)
+    }
+`
+const UPDATE_MUTATION = gql`
+    mutation UpdateAlerterMutation($alerterId:ID!,$inputAlerter:IAlerter!){
+        updateAlerter(alerterId:$alerterId,inputAlerter:$inputAlerter){
             id
         }
     }
@@ -50,5 +62,11 @@ export default function useAlertersQuery(orgId: string) {
 }
 
 export function useAddAlerterMutation() {
-    return useMutation<AlerterQueryResponse>(MUTATION);
+    return useMutation<AlerterQueryResponse>(ADD_MUTATION);
+}
+export function useDelAlerterMutation() {
+    return useMutation<string>(DEL_MUTATION);
+}
+export function useUpdateAlerterMutation() {
+    return useMutation<AlerterQueryResponse>(UPDATE_MUTATION);
 }

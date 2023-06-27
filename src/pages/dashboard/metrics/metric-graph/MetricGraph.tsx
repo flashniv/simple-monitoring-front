@@ -70,13 +70,13 @@ function metricToSeries(metric: Metric): ApexAxisChartSeries {
     metric.parameterGroups.map(value => {
         let dataLine: {
             name: string;
-            data: { x: any; y: any }[];
+            data: { x: string; y: number }[];
         } = {
             name: jsonToView(value.parameters),
             data: []
         };
         value.dataItems.map(dataItem => {
-            dataLine.data.push({x: formatDate(dataItem.timestamp), y: dataItem.value});
+            dataLine.data.push({x: formatDate(dataItem.timestamp), y: +dataItem.value.toFixed(3)});
         });
         series.push(dataLine);
     });

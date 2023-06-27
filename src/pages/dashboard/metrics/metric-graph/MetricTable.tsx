@@ -4,6 +4,8 @@ import {Metric} from "../../../../types/Metric";
 import {DataItem} from "../../../../types/DataItem";
 import {ParameterGroup} from "../../../../types/ParameterGroup";
 
+const multipliers = ["", "K", "M", "G", "T", "E", "P"]
+
 const headStyle = {
     fontWeight: "bold",
     textAlign: "left",
@@ -67,24 +69,30 @@ function getStatistic(dataItems: DataItem[]): Statistic {
     return {min: min, max: max, avg: sum / count, last: last};
 }
 
-function MetricTableRow(parameterGroup: ParameterGroup): JSX.Element {
+type MetricTableRowProps={
+    parameterGroup: ParameterGroup;
+    multiplier:number;
+}
+
+function MetricTableRow({parameterGroup,multiplier}:MetricTableRowProps): JSX.Element {
     const {last, avg, max, min}: Statistic = getStatistic(parameterGroup.dataItems);
 
     return (
         <>
             <Grid item xs={4} sx={bodyStyle}>{jsonToView(parameterGroup.parameters)}</Grid>
-            <Grid item xs={2} sx={bodyStyle}>{last?.toFixed(3)}</Grid>
-            <Grid item xs={2} sx={bodyStyle}>{min?.toFixed(3)}</Grid>
-            <Grid item xs={2} sx={bodyStyle}>{avg?.toFixed(3)}</Grid>
-            <Grid item xs={2} sx={bodyStyle}>{max?.toFixed(3)}</Grid>
+            <Grid item xs={2} sx={bodyStyle}>{last?.toFixed(3)} {multipliers[multiplier]}</Grid>
+            <Grid item xs={2} sx={bodyStyle}>{min?.toFixed(3)} {multipliers[multiplier]}</Grid>
+            <Grid item xs={2} sx={bodyStyle}>{avg?.toFixed(3)} {multipliers[multiplier]}</Grid>
+            <Grid item xs={2} sx={bodyStyle}>{max?.toFixed(3)} {multipliers[multiplier]}</Grid>
         </>
     );
 }
 
 type MetricTableProps = {
     metric: Metric;
+    multiplier: number;
 }
-export default function MetricTable({metric}: MetricTableProps) {
+export default function MetricTable({metric,multiplier}: MetricTableProps) {
     return (
         <Grid container p={2} sx={{backgroundColor: "white"}}>
             <Grid item xs={4} sx={headStyle}>Parameters</Grid>
@@ -93,8 +101,7 @@ export default function MetricTable({metric}: MetricTableProps) {
             <Grid item xs={2} sx={headStyle}>Avg</Grid>
             <Grid item xs={2} sx={headStyle}>Max</Grid>
             {metric.parameterGroups.map(value =>
-                <MetricTableRow key={value.id} id={value.id} parameters={value.parameters} metric={value.metric}
-                                dataItems={value.dataItems}/>
+                <MetricTableRow key={value.id} parameterGroup={value} multiplier={multiplier} />
             )}
         </Grid>
     );

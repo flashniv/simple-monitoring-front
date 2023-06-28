@@ -107,7 +107,8 @@ type TriggerDetailsProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function TriggerDetails({triggerRO,open,setOpen}:TriggerDetailsProps) {
+
+function TriggerDetails({triggerRO, open, setOpen}: TriggerDetailsProps) {
     const [modified, setModified] = React.useState(false);
     const [trigger, setTrigger] = React.useState<Trigger>(triggerRO);
     const [updateTrigger, {data, loading, error}] = useTriggerMutation();

@@ -69,6 +69,12 @@ const ALL_TRIGGERS = gql`
             suppressedScore
             muted
             conf
+            alerts{
+                id
+                alertTimestamp
+                triggerStatus
+                operationData
+            }
         }    
     }
 `;

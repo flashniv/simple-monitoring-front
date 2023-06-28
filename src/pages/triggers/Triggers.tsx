@@ -68,8 +68,8 @@ export default function Triggers({orgId, setAlert}: AlertsProps) {
                     </IconButton>
                 </Grid>
             </Grid>
-            {data?.triggers !== undefined
-                ? <>{data?.triggers.filter(filterFunc).sort(dateSort).map(value =>
+            {data?.triggersByOrganization !== undefined
+                ? <>{data?.triggersByOrganization.filter(filterFunc).sort(dateSort).map(value =>
                     <TriggerItem key={value.id} triggerRO={value}/>
                 )}</>
                 : <>Error</>
